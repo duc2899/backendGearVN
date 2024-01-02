@@ -25,26 +25,24 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-//                .cors(cors -> cors.configurationSource(config -> getCoresConfig()))
-                .cors(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(request ->
-//                        request.requestMatchers("**", "/resources/**, **/swagger-ui.html").permitAll()
-//                                .anyRequest().authenticated())
-                .authorizeHttpRequests(request -> request.anyRequest().permitAll())
+                .cors(cors -> cors.configurationSource(config -> getCoresConfig()))
+                .authorizeHttpRequests(request ->
+                        request.requestMatchers("**", "/resources/**, **/swagger-ui.html").permitAll()
+                                .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
-//    private CorsConfiguration getCoresConfig(){
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.setAllowedHeaders(Collections.singletonList("*"));
-//        config.setAllowedMethods(Collections.singletonList("*"));
-//        config.setAllowedOrigins(Collections.singletonList("http://localhost:4000"));
-//        config.addExposedHeader("Authorization ");
-//        config.setAllowCredentials(Boolean.TRUE);
-//        config.setMaxAge(3600L);
-//        return config;
-//        }
+    private CorsConfiguration getCoresConfig() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        config.setAllowedMethods(Collections.singletonList("*"));
+        config.setAllowedOrigins(Collections.singletonList("http://localhost:4000"));
+        config.addExposedHeader("Authorization ");
+        config.setAllowCredentials(Boolean.TRUE);
+        config.setMaxAge(3600L);
+        return config;
     }
+}

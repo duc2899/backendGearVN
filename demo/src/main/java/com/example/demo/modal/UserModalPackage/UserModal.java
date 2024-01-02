@@ -1,7 +1,8 @@
 package com.example.demo.modal.UserModalPackage;
 
+import com.example.demo.modal.AddressNotePackage.AddressNoteModal;
 import com.example.demo.modal.CartPackage.CartModal;
-import com.example.demo.modal.ProductModalPackage.ProductFeedbacks;
+import com.example.demo.modal.FeedbackPackage.FeedbackModal;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.context.annotation.Configuration;
@@ -51,10 +52,16 @@ public class UserModal implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "userModal", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private Set<ProductFeedbacks> productFeedbacks = new HashSet<>();
+    private Set<FeedbackModal> productFeedbacks = new HashSet<>();
 
     @OneToMany(mappedBy = "userCartModal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<CartModal> cartModal;
+
+    @OneToMany(mappedBy = "userAddressNoteModal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<AddressNoteModal> addressNoteModals;
+
+    @OneToOne(mappedBy = "userOTP")
+    private OTPModal otpModal;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

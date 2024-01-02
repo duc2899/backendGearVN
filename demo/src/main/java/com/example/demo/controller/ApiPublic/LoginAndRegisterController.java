@@ -31,7 +31,6 @@ public class LoginAndRegisterController {
         if (Objects.equals(authenticateServices.checkLogin(loginRequestDTO), "success")) {
             return ResponseHandel.generateResponse("Login successfully", HttpStatus.OK, authenticateServices.login(loginRequestDTO));
         } else {
-
             return ResponseHandel.generateResponse(authenticateServices.checkLogin(loginRequestDTO), HttpStatus.NOT_FOUND, null);
         }
     }

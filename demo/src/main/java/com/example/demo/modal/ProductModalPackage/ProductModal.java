@@ -2,6 +2,8 @@ package com.example.demo.modal.ProductModalPackage;
 
 import com.example.demo.modal.CartPackage.CartModal;
 import com.example.demo.modal.CategoryPackage.CategoryModal;
+import com.example.demo.modal.FeedbackPackage.FeedbackModal;
+import com.example.demo.modal.ProducerPackage.ProducerModal;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,12 +35,17 @@ public class ProductModal {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "productModal", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private Set<ProductFeedbacks> productFeedbacks = new HashSet<>();
+    @OneToMany(mappedBy = "productModal", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private Set<FeedbackModal> productFeedbacks = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_category")
     private CategoryModal categoryModal;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "id_producer")
+    private ProducerModal producerModal;
+
 
     @OneToOne(mappedBy = "productMouse")
     private MouseProperties mouseProperties;

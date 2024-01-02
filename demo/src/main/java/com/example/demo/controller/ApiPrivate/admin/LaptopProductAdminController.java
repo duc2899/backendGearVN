@@ -2,6 +2,7 @@ package com.example.demo.controller.ApiPrivate.admin;
 
 import com.example.demo.DTO.ProductDTO.EditLaptopProductRequestDTO;
 import com.example.demo.DTO.ProductDTO.LaptopProductRequestDTO;
+import com.example.demo.DTO.ProductDTO.ProductPropertiesDTO;
 import com.example.demo.service.ProductServices.LaptopProductServices;
 import com.example.demo.utilities.ResponseHandel;
 import org.springframework.http.HttpStatus;
@@ -20,15 +21,21 @@ public class LaptopProductAdminController {
     public LaptopProductAdminController(LaptopProductServices laptopProductServices) {
         this.laptopProductServices = laptopProductServices;
     }
+
     @GetMapping
-    public ResponseEntity<Object> getAllProductLaptop(){
+    public ResponseEntity<Object> getAllProductLaptop() {
         return ResponseHandel.generateResponse("successfully", HttpStatus.OK, laptopProductServices.getAllProduct());
     }
+
+    //    @GetMapping("/{laptopProperties}")
+//    public  ResponseEntity<Object> getProperties(@RequestBody ProductPropertiesDTO productPropertiesDTO){
+//        return
+//    }
     @PostMapping
-    public  ResponseEntity<Object> addProductLaptop(@RequestBody LaptopProductRequestDTO laptopProductRequestDTO){
-        if(Objects.equals(laptopProductServices.addLaptopProduct(laptopProductRequestDTO), "success")){
+    public ResponseEntity<Object> addProductLaptop(@RequestBody LaptopProductRequestDTO laptopProductRequestDTO) {
+        if (Objects.equals(laptopProductServices.addLaptopProduct(laptopProductRequestDTO), "success")) {
             return ResponseHandel.generateResponse("successfully", HttpStatus.CREATED, laptopProductServices.getAllProduct());
-        }else {
+        } else {
             return ResponseHandel.generateResponse(laptopProductServices.addLaptopProduct(laptopProductRequestDTO), HttpStatus.BAD_REQUEST, null);
         }
     }
@@ -50,5 +57,6 @@ public class LaptopProductAdminController {
             return ResponseHandel.generateResponse(laptopProductServices.editLaptopProduct(id, laptopProductRequestDTO), HttpStatus.BAD_REQUEST, null );
         }
     }
+
 
 }
