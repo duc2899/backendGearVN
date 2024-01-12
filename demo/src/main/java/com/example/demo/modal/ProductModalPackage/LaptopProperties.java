@@ -24,6 +24,12 @@ public class LaptopProperties {
     private String ssd;
     @Column(name = "screen")
     private String screen;
+    @Column(name = "size")
+    private String size;
+    @Column(name = "color")
+    private String color;
+    @Column(name = "operatingSystem")
+    private String operatingSystem;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_product")

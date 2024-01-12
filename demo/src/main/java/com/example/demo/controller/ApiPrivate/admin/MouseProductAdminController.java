@@ -1,6 +1,6 @@
 package com.example.demo.controller.ApiPrivate.admin;
 
-import com.example.demo.DTO.ProductDTO.LaptopProductRequestDTO;
+import com.example.demo.DTO.ProductDTO.ProductLaptopDTO.LaptopProductRequestDTO;
 import com.example.demo.service.ProductServices.LaptopProductServices;
 import com.example.demo.utilities.ResponseHandel;
 import org.springframework.http.HttpStatus;
@@ -18,34 +18,34 @@ public class MouseProductAdminController {
     public MouseProductAdminController(LaptopProductServices laptopProductServices) {
         this.laptopProductServices = laptopProductServices;
     }
-    @GetMapping
-    public ResponseEntity<Object> getAllProductMouse(){
-        return ResponseHandel.generateResponse("successfully", HttpStatus.OK, laptopProductServices.getAllProduct());
-    }
-    @PostMapping
-    public  ResponseEntity<Object> addProductMouse(@RequestBody LaptopProductRequestDTO laptopProductRequestDTO){
-        if(Objects.equals(laptopProductServices.addLaptopProduct(laptopProductRequestDTO), "success")){
-            return ResponseHandel.generateResponse("successfully", HttpStatus.CREATED, laptopProductServices.getAllProduct());
-        }else {
-            return ResponseHandel.generateResponse(laptopProductServices.addLaptopProduct(laptopProductRequestDTO), HttpStatus.BAD_REQUEST, null);
-        }
-    }
+//    @GetMapping
+//    public ResponseEntity<Object> getAllProductMouse(){
+//        return ResponseHandel.generateResponse("successfully", HttpStatus.OK, laptopProductServices.getAllProduct());
+//    }
+//    @PostMapping
+//    public  ResponseEntity<Object> addProductMouse(@RequestBody LaptopProductRequestDTO laptopProductRequestDTO){
+//        if(Objects.equals(laptopProductServices.addLaptopProduct(laptopProductRequestDTO), "success")){
+//            return ResponseHandel.generateResponse("successfully", HttpStatus.CREATED, laptopProductServices.getAllProduct());
+//        }else {
+//            return ResponseHandel.generateResponse(laptopProductServices.addLaptopProduct(laptopProductRequestDTO), HttpStatus.BAD_REQUEST, null);
+//        }
+//    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteProductMouse(@PathVariable("id") int id){
-        if(laptopProductServices.removeLaptopProduct(id).equals("success")){
-            return ResponseHandel.generateResponse("Delete successfully", HttpStatus.OK, laptopProductServices.getAllProduct());
-        }else {
-            return ResponseHandel.generateResponse(laptopProductServices.removeLaptopProduct(id), HttpStatus.NOT_FOUND, null);
-        }
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Object> deleteProductMouse(@PathVariable("id") int id){
+//        if(laptopProductServices.removeLaptopProduct(id).equals("success")){
+//            return ResponseHandel.generateResponse("Delete successfully", HttpStatus.OK, laptopProductServices.getAllProduct());
+//        }else {
+//            return ResponseHandel.generateResponse(laptopProductServices.removeLaptopProduct(id), HttpStatus.NOT_FOUND, null);
+//        }
+//    }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> editProductMouse(@RequestBody LaptopProductRequestDTO laptopProductRequestDTO, @PathVariable("id") int id){
-        if(laptopProductServices.editLaptopProduct(id, laptopProductRequestDTO).equals("success")){
-            return ResponseHandel.generateResponse("successfully", HttpStatus.OK, laptopProductServices.getAllProduct());
-        }else {
-            return ResponseHandel.generateResponse(laptopProductServices.editLaptopProduct(id, laptopProductRequestDTO), HttpStatus.BAD_REQUEST, null );
-        }
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Object> editProductMouse(@RequestBody LaptopProductRequestDTO laptopProductRequestDTO, @PathVariable("id") int id){
+//        if(laptopProductServices.editLaptopProduct(id, laptopProductRequestDTO).equals("success")){
+//            return ResponseHandel.generateResponse("successfully", HttpStatus.OK, laptopProductServices.getAllProduct());
+//        }else {
+//            return ResponseHandel.generateResponse(laptopProductServices.editLaptopProduct(id, laptopProductRequestDTO), HttpStatus.BAD_REQUEST, null );
+//        }
+//    }
 }

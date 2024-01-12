@@ -1,6 +1,5 @@
-package com.example.demo.DTO.AcccountDTO;
+package com.example.demo.DTO.AcccountDTO.CartDTO;
 
-import com.example.demo.modal.ProductModalPackage.ProductModal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CartDTO {
+public class CartRequestDTO {
+    private int idUser;
     private int amount;
-    private ProductModal productModal;
-
+    private int id_product;
 }

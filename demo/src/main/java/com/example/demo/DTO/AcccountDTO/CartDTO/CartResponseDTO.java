@@ -1,4 +1,4 @@
-package com.example.demo.DTO.AcccountDTO;
+package com.example.demo.DTO.AcccountDTO.CartDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +15,6 @@ public class CartResponseDTO {
     private Double oldPrice;
     private Double saleRate;
     private String image;
-    private String name_category;
+    private String nameCategory;
     private int amount;
 }

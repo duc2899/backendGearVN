@@ -1,6 +1,7 @@
 package com.example.demo.modal.UserModalPackage;
 
 import com.example.demo.modal.AddressNotePackage.AddressNoteModal;
+import com.example.demo.modal.BillModalPackage.BillModal;
 import com.example.demo.modal.CartPackage.CartModal;
 import com.example.demo.modal.FeedbackPackage.FeedbackModal;
 import jakarta.persistence.*;
@@ -37,8 +38,9 @@ public class UserModal implements UserDetails {
     private String email;
     @Column(name = "phoneNumber")
     private String phoneNumber;
+
     @Column(name = "isActive")
-    private Boolean isActive = true;
+    private Boolean isActive = Boolean.TRUE;
     @Column(name = "createdAt")
     private String createdDate;
 
@@ -59,6 +61,9 @@ public class UserModal implements UserDetails {
 
     @OneToMany(mappedBy = "userAddressNoteModal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<AddressNoteModal> addressNoteModals;
+
+    @OneToMany(mappedBy = "userBill", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private Set<BillModal> billModals;
 
     @OneToOne(mappedBy = "userOTP")
     private OTPModal otpModal;

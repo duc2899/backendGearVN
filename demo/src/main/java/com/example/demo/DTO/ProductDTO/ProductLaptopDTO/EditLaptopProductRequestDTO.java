@@ -1,7 +1,6 @@
-package com.example.demo.DTO.ProductDTO;
+package com.example.demo.DTO.ProductDTO.ProductLaptopDTO;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.example.demo.DTO.ProductDTO.ProductLaptopDTO.LaptopPropertiesDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +16,7 @@ public class EditLaptopProductRequestDTO {
     private Double saleRate;
     private int quantity;
     private String image;
-    private int id_category;
+    private int idCategory;
     private LaptopPropertiesDTO laptopProperties;
 
 }

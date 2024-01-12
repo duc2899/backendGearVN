@@ -1,5 +1,6 @@
-package com.example.demo.DTO.ProductDTO;
+package com.example.demo.DTO.ProductDTO.ProductLaptopDTO;
 
+import com.example.demo.DTO.ProductDTO.ProductLaptopDTO.LaptopPropertiesDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,8 @@ public class LaptopProductRequestDTO {
     private Double saleRate;
     private Integer quantity;
     private String image;
-    private int id_category;
-    private int description;
+    private int idCategory;
+    private String description;
+    private int idProducer;
     private LaptopPropertiesDTO laptopProperties;
 }

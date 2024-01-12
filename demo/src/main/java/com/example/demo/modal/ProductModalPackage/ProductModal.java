@@ -1,5 +1,6 @@
 package com.example.demo.modal.ProductModalPackage;
 
+import com.example.demo.modal.BillModalPackage.OrderModal;
 import com.example.demo.modal.CartPackage.CartModal;
 import com.example.demo.modal.CategoryPackage.CategoryModal;
 import com.example.demo.modal.FeedbackPackage.FeedbackModal;
@@ -7,6 +8,7 @@ import com.example.demo.modal.ProducerPackage.ProducerModal;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,11 +34,15 @@ public class ProductModal {
     private int quantity;
     @Column(name = "image")
     private String image;
-    @Column(name = "description")
+
+    @Column(name = "description", length = 1000)
     private String description;
 
     @OneToMany(mappedBy = "productModal", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Set<FeedbackModal> productFeedbacks = new HashSet<>();
+
+    @OneToMany(mappedBy = "productModal", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private Set<PreviewImageModal> previewImageModals = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_category")
@@ -45,6 +51,14 @@ public class ProductModal {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_producer")
     private ProducerModal producerModal;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "orders_products",
+            joinColumns = @JoinColumn(name = "id_product", referencedColumnName = "id_product", nullable = false, updatable = false),
+            inverseJoinColumns = @JoinColumn(name = "id_order", referencedColumnName = "id_order", nullable = false, updatable = false)
+    )
+
+    private List<OrderModal> orderMeal = new ArrayList<>();
 
 
     @OneToOne(mappedBy = "productMouse")

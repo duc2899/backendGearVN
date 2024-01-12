@@ -1,4 +1,4 @@
-package com.example.demo.DTO.AcccountDTO;
+package com.example.demo.DTO.BillDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CartRequestDTO {
+public class GetBillsByUserRequestDTO {
     private int idUser;
-    private int amount;
-    private int id_product;
 }

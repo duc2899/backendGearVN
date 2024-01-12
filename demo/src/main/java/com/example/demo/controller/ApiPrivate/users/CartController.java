@@ -1,6 +1,7 @@
 package com.example.demo.controller.ApiPrivate.users;
 
-import com.example.demo.DTO.AcccountDTO.CartRequestDTO;
+import com.example.demo.DTO.AcccountDTO.CartDTO.CartRequestDTO;
+import com.example.demo.DTO.AcccountDTO.CartDTO.GetCartRequestDTO;
 import com.example.demo.service.CartServices.CartServices;
 import com.example.demo.utilities.ResponseHandel;
 import org.springframework.http.HttpStatus;
@@ -19,12 +20,17 @@ public class CartController {
         this.cartServices = cartServices;
     }
 
+    @GetMapping
+    public ResponseEntity<Object> getCartByUser(@RequestBody GetCartRequestDTO getCartRequestDTO) {
+        return ResponseHandel.generateResponse("success", HttpStatus.OK, cartServices.getCartUser(getCartRequestDTO.getIdUser()));
+    }
+
     @PostMapping
-    public ResponseEntity<Object> actionAddToCart(@RequestBody CartRequestDTO cartRequestDTO){
-        if (Objects.equals(cartServices.addToCart(cartRequestDTO), "success")){
-          return   ResponseHandel.generateResponse("success", HttpStatus.OK, null);
-        }else {
-          return   ResponseHandel.generateResponse(cartServices.addToCart(cartRequestDTO), HttpStatus.BAD_REQUEST, null);
+    public ResponseEntity<Object> actionCart(@RequestBody CartRequestDTO cartRequestDTO) {
+        if (Objects.equals(cartServices.addToCart(cartRequestDTO), "success")) {
+            return ResponseHandel.generateResponse("success", HttpStatus.OK, null);
+        } else {
+            return ResponseHandel.generateResponse(cartServices.addToCart(cartRequestDTO), HttpStatus.BAD_REQUEST, null);
         }
     }
 

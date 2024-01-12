@@ -1,5 +1,6 @@
 package com.example.demo.DTO.ProductDTO;
 
+import com.example.demo.DTO.ProductDTO.ProductLaptopDTO.LaptopPropertiesDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class MouseProductRequestDTO {
     private Double saleRate;
     private Integer quantity;
     private String image;
-    private int id_category;
+    private int idCategory;
     private int description;
     private LaptopPropertiesDTO laptopProperties;
 }

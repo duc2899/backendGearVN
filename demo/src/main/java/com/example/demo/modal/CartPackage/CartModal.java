@@ -32,4 +32,6 @@ public class CartModal {
     @ManyToOne
     @JoinColumn(name = "id_user")
     private UserModal userCartModal;
+
+
 }

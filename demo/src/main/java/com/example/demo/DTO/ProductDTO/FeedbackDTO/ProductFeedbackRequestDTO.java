@@ -1,4 +1,4 @@
-package com.example.demo.DTO.ProductDTO;
+package com.example.demo.DTO.ProductDTO.FeedbackDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

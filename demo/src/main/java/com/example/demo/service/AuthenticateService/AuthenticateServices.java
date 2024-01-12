@@ -39,6 +39,7 @@ public class AuthenticateServices {
                 .role(Role.USER)
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
+                .isActive(true)
                 .build();
         userRepository.save(user);
 
