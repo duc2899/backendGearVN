@@ -5,7 +5,6 @@ import com.example.demo.DTO.ProductDTO.FeedbackDTO.FeedbackResponseDTO;
 import com.example.demo.modal.FeedbackPackage.FeedbackModal;
 import com.example.demo.modal.ProductModalPackage.ProductModal;
 import com.example.demo.modal.UserModalPackage.UserModal;
-import com.example.demo.repository.UsersRepository.UserRepository;
 
 public class TransferFeedback {
     public TransferFeedback() {
@@ -28,7 +27,7 @@ public class TransferFeedback {
         result.setStar(feedbackModal.getStar());
         result.setCreatedDate(feedbackModal.getCreatedDate());
         result.setMessage(feedbackModal.getMessage());
-        result.setEmail(user.getEmail());
+        result.setName(user.getName());
         result.setIsEdit(feedbackModal.getIsEdit());
         return result;
     }

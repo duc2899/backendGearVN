@@ -6,13 +6,13 @@ import com.example.demo.modal.UserModalPackage.UserModal;
 import com.example.demo.repository.OTPRepository.OTPRepository;
 import com.example.demo.repository.UsersRepository.UserRepository;
 import com.example.demo.utilities.TransferUtilities;
-import lombok.RequiredArgsConstructor;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -51,8 +51,9 @@ public class AccountUserServices {
         UserModal userModal = userRepository.findUserByID(id);
         ChangeInforUserResponseDTO result = new ChangeInforUserResponseDTO();
         result.setEmail(userModal.getEmail());
-        result.setName(userModal.getName());
+        result.setUserName(userModal.getName());
         result.setPhoneNumber(userModal.getPhoneNumber());
+        result.setId(userModal.getId_user());
         return result;
     }
 
@@ -85,17 +86,17 @@ public class AccountUserServices {
             }
             getUser.setEmail(changeInforUserRequestDTO.getEmail());
         }
-        if (changeInforUserRequestDTO.getName() != null) {
-            if (Objects.equals(changeInforUserRequestDTO.getName().trim(), "")) {
+        if (changeInforUserRequestDTO.getUserName() != null) {
+            if (Objects.equals(changeInforUserRequestDTO.getUserName().trim(), "")) {
                 return "Username cannot be blank";
             }
-            if (checkSpace(changeInforUserRequestDTO.getName().trim())) {
+            if (checkSpace(changeInforUserRequestDTO.getUserName().trim())) {
                 return "No spaces are allowed in the username";
             }
-            if (changeInforUserRequestDTO.getName().length() < 3 || changeInforUserRequestDTO.getName().length() > 15) {
+            if (changeInforUserRequestDTO.getUserName().length() < 3 || changeInforUserRequestDTO.getUserName().length() > 15) {
                 return "Username must be 3 to 15 characters";
             }
-            getUser.setName(changeInforUserRequestDTO.getName());
+            getUser.setName(changeInforUserRequestDTO.getUserName());
         }
         if (changeInforUserRequestDTO.getPhoneNumber() != null) {
             if (!isValidPhone(changeInforUserRequestDTO.getPhoneNumber().trim())) {
@@ -110,12 +111,12 @@ public class AccountUserServices {
             getUser.setPassword(changeInforUserRequestDTO.getPassword());
         }
         if (changeInforUserRequestDTO.getIsActive() != null) {
-
             getUser.setIsActive(changeInforUserRequestDTO.getIsActive());
         }
         userRepository.save(getUser);
         return "success";
     }
+
 
     public String forGotPassWord(ForgotPasswordDTO forgotPasswordDTO, int expiredTime) {
 
@@ -149,16 +150,14 @@ public class AccountUserServices {
         if (userModal.isEmpty()) {
             return "User not found";
         }
-        OTPModal otpModal = otpRepository.findOTPByUserAndCode(userModal.get().getId_user(), checkOTPDTO.getCode());
-        if (otpModal == null) {
-            return "Invalid OTP code";
+        OTPModal otpModal = otpRepository.findOTPByUser(userModal.get().getId_user());
+        if (!otpModal.getExpirationTime().isAfter(LocalDateTime.now())) {
+            return "OTP code has expired";
         }
         if (!Objects.equals(otpModal.getCode(), checkOTPDTO.getCode())) {
             return "Invalid OTP code";
         }
-        if (!otpModal.getExpirationTime().isAfter(LocalDateTime.now())) {
-            return "OTP code has expired";
-        }
+
         otpRepository.deleteOTPById(otpModal.getId_otp()); // delete khi user đã check mã otp thành công
         return "success";
     }
@@ -177,7 +176,6 @@ public class AccountUserServices {
         return "success";
     }
 
-
     public String sendEmail(String email, String otp, int expiration) {
         try {
             MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
@@ -193,6 +191,11 @@ public class AccountUserServices {
         }
         return "send mail";
     }
+
+    public boolean checkPassword(CheckPasswordRequestDTO checkPasswordRequestDTO) {
+        return userRepository.findUserByIDAndPass(checkPasswordRequestDTO.getId(), checkPasswordRequestDTO.getPassword()).isPresent();
+    }
+
 
     private boolean checkSpace(String userName) {
         for (int i = 0; i < userName.length(); i++) {
@@ -225,9 +228,7 @@ public class AccountUserServices {
 
     private boolean isExitEmail(String email, UserModal userModal) {
         if (!Objects.equals(userModal.getEmail(), email)) {
-            if (userRepository.findUserByEmailOptional(email).isEmpty()) {
-                return true;
-            }
+            return userRepository.findUserByEmailOptional(email).isEmpty();
         }
         return false;
     }

@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface OTPRepository extends JpaRepository<OTPModal, Integer> {
-    @Query(value = "select * from gearvn.otp where id_user = :id_user and code = :code", nativeQuery = true)
-    OTPModal findOTPByUserAndCode(@Param("id_user") int id_user, @Param("code") String code);
+    @Query(value = "select * from gearvn.otp where id_user = :id_user", nativeQuery = true)
+    OTPModal findOTPByUser(@Param("id_user") int id_user);
 
     @Query(value = "select * from gearvn.otp where id_user = :id_user", nativeQuery = true)
     OTPModal findOTPByEmailUser(@Param("id_user") int id_user);

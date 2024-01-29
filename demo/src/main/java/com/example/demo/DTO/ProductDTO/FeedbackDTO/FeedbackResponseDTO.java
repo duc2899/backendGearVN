@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FeedbackResponseDTO {
     private int id;
-    private String email;
+    private String name;
     private String message;
     private int star;
     private String createdDate;
     private Boolean isEdit;
+
 }

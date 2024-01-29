@@ -1,5 +1,6 @@
 package com.example.demo.modal.ProductModalPackage;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,8 +32,9 @@ public class LaptopProperties {
     @Column(name = "operatingSystem")
     private String operatingSystem;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_product")
+    @JsonManagedReference
     private ProductModal productLaptop;
 
 }

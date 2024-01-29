@@ -17,10 +17,11 @@ public class PreviewImageService {
         this.productRepository = productRepository;
     }
 
-    public void addPreviewImage(int id, String image) {
+    public void addPreviewImage(int id, String image, String idImage) {
         PreviewImageModal previewImageModal = new PreviewImageModal();
         ProductModal productModal = productRepository.findProductById(id);
         previewImageModal.setProductModal(productModal);
+        previewImageModal.setIdImage(idImage);
         previewImageModal.setImage(image);
 
         previewImageRepository.save(previewImageModal);

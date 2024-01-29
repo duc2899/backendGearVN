@@ -1,14 +1,18 @@
 package com.example.demo.utilities;
 
 import com.example.demo.DTO.AcccountDTO.AccountUserDTO;
-import com.example.demo.DTO.ProductDTO.*;
-import com.example.demo.DTO.ProductDTO.ProductLaptopDTO.*;
+import com.example.demo.DTO.ProductDTO.FeedbackProductResponseDTO;
+import com.example.demo.DTO.ProductDTO.PreviewImageResponseDTO;
+import com.example.demo.DTO.ProductDTO.ProductLaptopDTO.LaptopProductRequestDTO;
+import com.example.demo.DTO.ProductDTO.ProductLaptopDTO.LaptopPropertiesDTO;
+import com.example.demo.DTO.ProductDTO.ProductResponseDTO;
+import com.example.demo.DTO.ProductDTO.PropertiesDTO;
 import com.example.demo.modal.CategoryPackage.CategoryModal;
 import com.example.demo.modal.FeedbackPackage.FeedbackModal;
 import com.example.demo.modal.ProducerPackage.ProducerModal;
+import com.example.demo.modal.ProductModalPackage.LaptopProperties;
 import com.example.demo.modal.ProductModalPackage.PreviewImageModal;
 import com.example.demo.modal.ProductModalPackage.ProductModal;
-import com.example.demo.modal.ProductModalPackage.LaptopProperties;
 import com.example.demo.modal.UserModalPackage.UserModal;
 import com.example.demo.repository.FeedbackRepository.FeedbackRepository;
 import com.example.demo.repository.ProductRepository.PreviewImageRepository;
@@ -44,25 +48,19 @@ public class TransferUtilities {
         return laptopProperties;
     }
 
-    public static LaptopPropertiesDTO toLapTopPropertiesDTO(LaptopProperties laptopProperties) {
-        LaptopPropertiesDTO laptopPropertiesDTO = new LaptopPropertiesDTO();
-        BeanUtils.copyProperties(laptopProperties, laptopPropertiesDTO);
-        return laptopPropertiesDTO;
+    public static LaptopProperties toLapTopPropertiesDB(LaptopPropertiesDTO laptopPropertiesDTO, LaptopProperties laptopProperties) {
+        BeanUtils.copyProperties(laptopPropertiesDTO, laptopProperties);
+        return laptopProperties;
     }
 
-    private static LaptopPropertiesDTO toLaptopPropertiesDTO(LaptopProperties laptopProperties) {
-        LaptopPropertiesDTO laptopPropertiesDTO = new LaptopPropertiesDTO();
-        BeanUtils.copyProperties(laptopProperties, laptopPropertiesDTO);
-        return laptopPropertiesDTO;
-    }
+    public static ProductResponseDTO toLaptopProductResponseDTO(ProductModal productModal, FeedbackRepository feedbackRepository, PreviewImageRepository previewImageRepository) {
+        ProductResponseDTO productResponseDTO = new ProductResponseDTO();
 
-
-    public static LaptopProductDTO toLaptopProductResponseDTO(ProductModal productModal, FeedbackRepository feedbackRepository, PreviewImageRepository previewImageRepository) {
-        LaptopProductDTO laptopProductResponseDTO = new LaptopProductDTO();
         List<FeedbackProductResponseDTO> productFeedback = new ArrayList<>();
         List<PreviewImageResponseDTO> previewImageResponseDTOS = new ArrayList<>();
 
         List<PropertiesDTO> propertiesDTOS = new ArrayList<>();
+
         PropertiesDTO propertiesCPU = new PropertiesDTO();
         propertiesCPU.setIsPublic(true);
         propertiesCPU.setId(1);
@@ -123,9 +121,6 @@ public class TransferUtilities {
         for (FeedbackModal feedbackModal : feedbackModals) {
             FeedbackProductResponseDTO feedbackProductResponseDTO = new FeedbackProductResponseDTO();
             feedbackProductResponseDTO.setStar(feedbackModal.getStar());
-            feedbackProductResponseDTO.setMessage(feedbackModal.getMessage());
-            feedbackProductResponseDTO.setCreatedAt(feedbackModal.getCreatedDate());
-            feedbackProductResponseDTO.setName(feedbackModal.getUserModal().getName());
             productFeedback.add(feedbackProductResponseDTO);
         }
         //Add preview image
@@ -136,13 +131,14 @@ public class TransferUtilities {
             previewImageResponseDTO.setId(previewImageModal.getId());
             previewImageResponseDTOS.add(previewImageResponseDTO);
         }
-        laptopProductResponseDTO.setPreviewImages(previewImageResponseDTOS);
-        laptopProductResponseDTO.setDataFeedback(productFeedback);
-        laptopProductResponseDTO.setProperties(propertiesDTOS);
-        laptopProductResponseDTO.setId(productModal.getId_product());
-        laptopProductResponseDTO.setType(productModal.getCategoryModal().getName_category());
-        BeanUtils.copyProperties(productModal, laptopProductResponseDTO);
-        return laptopProductResponseDTO;
+        productResponseDTO.setPreviewImages(previewImageResponseDTOS);
+        productResponseDTO.setDataFeedback(productFeedback);
+        productResponseDTO.setProducer(productModal.getProducerModal().getName_producer());
+        productResponseDTO.setProperties(propertiesDTOS);
+        productResponseDTO.setId(productModal.getId_product());
+        productResponseDTO.setType(productModal.getCategoryModal().getName_category());
+        BeanUtils.copyProperties(productModal, productResponseDTO);
+        return productResponseDTO;
     }
 
     public static ProductModal toLaptopProduct(LaptopProductRequestDTO laptopProductRequestDTO, CategoryModal categoryModal, ProducerModal producerModal) {
@@ -154,17 +150,8 @@ public class TransferUtilities {
         return productModal;
     }
 
-    public static ProductModal toLaptopProduct(EditLaptopProductRequestDTO editLaptopProductRequestDTO, CategoryModal categoryModal) {
-        ProductModal productModal = new ProductModal();
-        productModal.setCategoryModal(categoryModal);
-        BeanUtils.copyProperties(editLaptopProductRequestDTO, productModal);
 
-        return productModal;
-    }
-
-
-    public static ProductModal toLaptopDB(LaptopProductRequestDTO laptopProductRequestDTO, ProductModal productModalDB, CategoryModal categoryModal) {
-        productModalDB.setCategoryModal(categoryModal);
+    public static ProductModal toLaptopDB(LaptopProductRequestDTO laptopProductRequestDTO, ProductModal productModalDB) {
         BeanUtils.copyProperties(laptopProductRequestDTO, productModalDB);
         return productModalDB;
     }

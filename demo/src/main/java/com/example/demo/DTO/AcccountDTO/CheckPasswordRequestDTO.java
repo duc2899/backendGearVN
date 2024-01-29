@@ -1,4 +1,4 @@
-package com.example.demo.DTO.AcccountDTO.CartDTO;
+package com.example.demo.DTO.AcccountDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GetCartRequestDTO {
-    private int idUser;
+public class CheckPasswordRequestDTO {
+    private int id;
+    private String password;
 }

@@ -16,11 +16,11 @@ import java.util.List;
 @Builder
 public class LoginResponseDTO {
     private String accessToken;
-    private String name;
+    private String userName;
     private int id;
     private Role role;
     private String email;
     private String phoneNumber;
     private List<CartResponseDTO> cart;
-    private List<AddressNoteResponseDTO> addressNote;
+    private List<AddressNoteResponseDTO> addressNotes;
 }

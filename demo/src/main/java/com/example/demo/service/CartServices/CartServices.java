@@ -24,19 +24,22 @@ public class CartServices {
     public List<CartResponseDTO> getCartUser(int idUser) {
         List<CartResponseDTO> cartResponseDTOList = new ArrayList<>();
         List<CartModal> cartModalList = cartRepository.findCartByUser(idUser);
-        for (CartModal cartModal : cartModalList) {
+        if (cartModalList.size() > 0) {
+            for (CartModal cartModal : cartModalList) {
 
-            CartResponseDTO cartResponseDTO = new CartResponseDTO();
-            cartResponseDTO.setId(cartModal.getId_cart());
-            cartResponseDTO.setAmount(cartModal.getAmount());
-            cartResponseDTO.setTitle(cartModal.getProductModal().getTitle());
-            cartResponseDTO.setOldPrice(cartModal.getProductModal().getOldPrice());
-            cartResponseDTO.setSaleRate(cartModal.getProductModal().getSaleRate());
-            cartResponseDTO.setImage(cartModal.getProductModal().getImage());
-            cartResponseDTO.setNameCategory(cartModal.getProductModal().getCategoryModal().getName_category());
-
-            cartResponseDTOList.add(cartResponseDTO);
+                CartResponseDTO cartResponseDTO = new CartResponseDTO();
+                cartResponseDTO.setId(cartModal.getId_cart());
+                cartResponseDTO.setAmount(cartModal.getAmount());
+                cartResponseDTO.setTitle(cartModal.getProductModal().getTitle());
+                cartResponseDTO.setOldPrice(cartModal.getProductModal().getOldPrice());
+                cartResponseDTO.setSaleRate(cartModal.getProductModal().getSaleRate());
+                cartResponseDTO.setImage(cartModal.getProductModal().getImage());
+                cartResponseDTO.setNameCategory(cartModal.getProductModal().getCategoryModal().getName_category());
+                cartResponseDTO.setIdProduct(cartModal.getProductModal().getId_product());
+                cartResponseDTOList.add(cartResponseDTO);
+            }
         }
+
         return cartResponseDTOList;
     }
 
@@ -63,6 +66,7 @@ public class CartServices {
             ProductModal pro = productRepository.findProductById(cartRequestDTO.getId_product());
             if (amount <= 0) {
                 cartRepository.delete(carDB);
+                return "success";
             }
             if (amount > pro.getQuantity()) {
                 return "Quantity is not enough";

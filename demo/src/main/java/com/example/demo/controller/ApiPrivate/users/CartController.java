@@ -1,11 +1,11 @@
 package com.example.demo.controller.ApiPrivate.users;
 
 import com.example.demo.DTO.AcccountDTO.CartDTO.CartRequestDTO;
-import com.example.demo.DTO.AcccountDTO.CartDTO.GetCartRequestDTO;
 import com.example.demo.service.CartServices.CartServices;
 import com.example.demo.utilities.ResponseHandel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
@@ -13,6 +13,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("api/public/user/cart")
 @CrossOrigin(origins = "http://localhost:3000")
+@Validated
 public class CartController {
     private final CartServices cartServices;
 
@@ -20,9 +21,9 @@ public class CartController {
         this.cartServices = cartServices;
     }
 
-    @GetMapping
-    public ResponseEntity<Object> getCartByUser(@RequestBody GetCartRequestDTO getCartRequestDTO) {
-        return ResponseHandel.generateResponse("success", HttpStatus.OK, cartServices.getCartUser(getCartRequestDTO.getIdUser()));
+    @GetMapping("/{idUser}")
+    public ResponseEntity<Object> getCartByUser(@PathVariable int idUser) {
+        return ResponseHandel.generateResponse("success", HttpStatus.OK, cartServices.getCartUser(idUser));
     }
 
     @PostMapping

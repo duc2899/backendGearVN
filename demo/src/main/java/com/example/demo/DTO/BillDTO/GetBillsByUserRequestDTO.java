@@ -1,14 +1,17 @@
 package com.example.demo.DTO.BillDTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+
 public class GetBillsByUserRequestDTO {
+    @NotNull(message = "idUser must be not null")
     private int idUser;
+
+    public int getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
+    }
 }

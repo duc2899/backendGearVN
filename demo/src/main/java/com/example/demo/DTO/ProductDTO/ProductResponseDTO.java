@@ -1,22 +1,27 @@
 package com.example.demo.DTO.ProductDTO;
 
-import com.example.demo.DTO.ProductDTO.ProductLaptopDTO.LaptopPropertiesDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MouseProductRequestDTO {
+public class ProductResponseDTO {
+    private int id;
     private String title;
     private Double oldPrice;
     private Double saleRate;
     private Integer quantity;
     private String image;
-    private int idCategory;
-    private int description;
-    private LaptopPropertiesDTO laptopProperties;
+    private String description;
+    private String type;
+    private String producer;
+    private List<PropertiesDTO> properties;
+    private List<FeedbackProductResponseDTO> dataFeedback;
+    private List<PreviewImageResponseDTO> previewImages;
 }

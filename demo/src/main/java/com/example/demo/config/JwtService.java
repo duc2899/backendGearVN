@@ -1,13 +1,10 @@
 package com.example.demo.config;
 
-import com.example.demo.modal.UserModalPackage.UserModal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +58,6 @@ public class JwtService {
     }
     public boolean isTokenValid(String token, UserDetails userDetails){
         final String userName = extractUsername(token);
-        System.out.println(userDetails.getUsername());
         return  (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 

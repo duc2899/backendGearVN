@@ -1,6 +1,9 @@
 package com.example.demo.controller.ApiPublic;
 
-import com.example.demo.DTO.AcccountDTO.*;
+import com.example.demo.DTO.AcccountDTO.ChangePasswordRequestDTO;
+import com.example.demo.DTO.AcccountDTO.CheckOTPDTO;
+import com.example.demo.DTO.AcccountDTO.ForgotPasswordDTO;
+import com.example.demo.DTO.AcccountDTO.ForgotPasswordResponseDTO;
 import com.example.demo.service.AccountUserServices.AccountUserServices;
 import com.example.demo.utilities.ResponseHandel;
 import org.springframework.http.HttpStatus;
@@ -21,7 +24,7 @@ public class ForgotAndActiveController {
 
     @PostMapping("/forgotPassword")
     public ResponseEntity<Object> forgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
-        int expiredTime = 5; //Thời gian hết hạn otp
+        int expiredTime = 1; //Thời gian hết hạn otp
         ForgotPasswordResponseDTO forgotPasswordResponseDTO = new ForgotPasswordResponseDTO();
         forgotPasswordResponseDTO.setExpiration(expiredTime);
         if (Objects.equals(accountUserServices.forGotPassWord(forgotPasswordDTO, expiredTime), "success")) {
@@ -33,19 +36,21 @@ public class ForgotAndActiveController {
 
     @PostMapping("/checkOTP")
     public ResponseEntity<Object> checkOTP(@RequestBody CheckOTPDTO checkOTPDTO) {
-        if (Objects.equals(accountUserServices.checkOTP(checkOTPDTO), "success")) {
+        String message = accountUserServices.checkOTP(checkOTPDTO);
+        if (Objects.equals(message, "success")) {
             return ResponseHandel.generateResponse("success", HttpStatus.OK, null);
         } else {
-            return ResponseHandel.generateResponse(accountUserServices.checkOTP(checkOTPDTO), HttpStatus.NOT_FOUND, null);
+            return ResponseHandel.generateResponse(message, HttpStatus.NOT_FOUND, null);
         }
     }
 
     @PostMapping("/changePassword")
     public ResponseEntity<Object> changePassword(@RequestBody ChangePasswordRequestDTO changePasswordRequestDTO) {
-        if (Objects.equals(accountUserServices.changPassword(changePasswordRequestDTO), "success")) {
+        String message = accountUserServices.changPassword(changePasswordRequestDTO);
+        if (Objects.equals(message, "success")) {
             return ResponseHandel.generateResponse("Change success", HttpStatus.OK, null);
         } else {
-            return ResponseHandel.generateResponse(accountUserServices.changPassword(changePasswordRequestDTO), HttpStatus.NOT_FOUND, null);
+            return ResponseHandel.generateResponse(message, HttpStatus.NOT_FOUND, null);
         }
     }
 }

@@ -1,9 +1,6 @@
 package com.example.demo.service.AuthenticateService;
 
-import com.example.demo.DTO.AcccountDTO.LoginRequestDTO;
-import com.example.demo.DTO.AcccountDTO.LoginResponseDTO;
-import com.example.demo.DTO.AcccountDTO.RegisterRequestDTO;
-import com.example.demo.DTO.AcccountDTO.RegisterResponseDTO;
+import com.example.demo.DTO.AcccountDTO.*;
 import com.example.demo.config.JwtService;
 import com.example.demo.modal.UserModalPackage.Role;
 import com.example.demo.modal.UserModalPackage.UserModal;
@@ -65,7 +62,7 @@ public class AuthenticateServices {
         return LoginResponseDTO.builder()
                 .accessToken(jwtToken)
                 .id(user.getId_user())
-                .name(user.getName())
+                .userName(user.getName())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .role(user.getRole())
@@ -81,6 +78,23 @@ public class AuthenticateServices {
             return "Your account has been locked";
         }
         return "success";
+    }
+
+    public boolean isExitEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public GetInformationUserResponseDTO getInformationUser(String email) {
+        UserModal user = userRepository.findUserByEmail(email);
+        return GetInformationUserResponseDTO.builder()
+                .id(user.getId_user())
+                .userName(user.getName())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .role(user.getRole())
+                .cart(cartServices.getCartUser(user.getId_user()))
+                .build();
+
     }
 
     public String checkLoginAdmin(LoginRequestDTO requestDTO) {

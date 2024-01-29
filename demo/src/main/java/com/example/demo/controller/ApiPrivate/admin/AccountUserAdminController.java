@@ -38,28 +38,31 @@ public class AccountUserAdminController {
     }
     @PostMapping
     public ResponseEntity<Object> addAccount(@RequestBody RegisterRequestDTO registerRequest) {
-        if (Objects.equals(authenticateServices.checkRegister(registerRequest), "success")) {
+        String message = authenticateServices.checkRegister(registerRequest);
+        if (Objects.equals(message, "success")) {
             return ResponseHandel.generateResponse("Add User successfully", HttpStatus.CREATED, authenticateServices.register(registerRequest));
         } else {
-            return ResponseHandel.generateResponse(authenticateServices.checkRegister(registerRequest), HttpStatus.BAD_REQUEST, null);
+            return ResponseHandel.generateResponse(message, HttpStatus.BAD_REQUEST, null);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable("id") int id) {
-        if (accountUserServices.deleteUser(id).equals("success")) {
-            return ResponseHandel.generateResponse("Delete Successfully", HttpStatus.OK, accountUserServices.getAllUsers());
+        String message = accountUserServices.deleteUser(id);
+        if (Objects.equals(message, "success")) {
+            return ResponseHandel.generateResponse("Delete Successfully", HttpStatus.OK, null);
         } else {
-            return ResponseHandel.generateResponse(accountUserServices.deleteUser(id), HttpStatus.NOT_FOUND, null);
+            return ResponseHandel.generateResponse(message, HttpStatus.NOT_FOUND, null);
         }
     }
 
     @PutMapping
     public ResponseEntity<Object> editUser(@RequestBody ChangeInforUserRequestDTO changeInforUserRequestDTO) {
-        if (Objects.equals(accountUserServices.editUser(changeInforUserRequestDTO), "success")) {
-            return ResponseHandel.generateResponse("Edit Successfully", HttpStatus.OK, accountUserServices.getUserByID(changeInforUserRequestDTO.getId()));
+        String message = accountUserServices.editUser(changeInforUserRequestDTO);
+        if (Objects.equals(message, "success")) {
+            return ResponseHandel.generateResponse("Edit Successfully", HttpStatus.OK, null);
         } else {
-            return ResponseHandel.generateResponse(accountUserServices.editUser(changeInforUserRequestDTO), HttpStatus.NOT_FOUND, null);
+            return ResponseHandel.generateResponse(message, HttpStatus.NOT_FOUND, null);
         }
     }
 

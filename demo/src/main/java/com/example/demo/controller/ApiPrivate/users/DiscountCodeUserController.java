@@ -28,7 +28,7 @@ public class DiscountCodeUserController {
     @PostMapping
     public ResponseEntity<Object> checkDiscountCode(@RequestBody CheckDiscountCodeRequestDTO checkDiscountCodeRequestDTO) {
         if (Objects.equals(discountCodeService.checkDiscountCode(checkDiscountCodeRequestDTO), "success")) {
-            return ResponseHandel.generateResponse("success", HttpStatus.OK, null);
+            return ResponseHandel.generateResponse("success", HttpStatus.OK, discountCodeService.getDiscountCodeByCode(checkDiscountCodeRequestDTO.getCode()));
         }
         return ResponseHandel.generateResponse(discountCodeService.checkDiscountCode(checkDiscountCodeRequestDTO), HttpStatus.BAD_REQUEST, null);
     }

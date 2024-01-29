@@ -14,4 +14,5 @@ public class PropertiesDTO {
     private String properties;
     private String name;
     private Boolean isPublic;
+
 }

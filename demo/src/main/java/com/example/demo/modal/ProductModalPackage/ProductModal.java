@@ -5,6 +5,7 @@ import com.example.demo.modal.CartPackage.CartModal;
 import com.example.demo.modal.CategoryPackage.CategoryModal;
 import com.example.demo.modal.FeedbackPackage.FeedbackModal;
 import com.example.demo.modal.ProducerPackage.ProducerModal;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,24 +36,24 @@ public class ProductModal {
     @Column(name = "image")
     private String image;
 
-    @Column(name = "description", length = 1000)
+    @Column(name = "description", length = 2000)
     private String description;
 
-    @OneToMany(mappedBy = "productModal", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "productModal", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FeedbackModal> productFeedbacks = new HashSet<>();
 
-    @OneToMany(mappedBy = "productModal", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "productModal", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PreviewImageModal> previewImageModals = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_category")
     private CategoryModal categoryModal;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_producer")
     private ProducerModal producerModal;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "orders_products",
             joinColumns = @JoinColumn(name = "id_product", referencedColumnName = "id_product", nullable = false, updatable = false),
             inverseJoinColumns = @JoinColumn(name = "id_order", referencedColumnName = "id_order", nullable = false, updatable = false)
@@ -60,13 +61,15 @@ public class ProductModal {
 
     private List<OrderModal> orderMeal = new ArrayList<>();
 
-
-    @OneToOne(mappedBy = "productMouse")
+    @OneToOne(mappedBy = "productMouse", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private MouseProperties mouseProperties;
 
-    @OneToOne(mappedBy = "productLaptop", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "productLaptop", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private LaptopProperties laptopProperties;
 
     @OneToMany(mappedBy = "productModal")
     private List<CartModal> cartModals;
+
 }

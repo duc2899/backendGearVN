@@ -12,6 +12,9 @@ import java.util.List;
 
 @Repository
 public interface BillRepository extends JpaRepository<BillModal, Integer> {
+    @Query(value = "select * from gearvn.bills where :id_bill = id_bill", nativeQuery = true)
+    BillModal findBillsByIdBill(@Param("id_bill") int id_bill);
+
     @Query(value = "select * from gearvn.bills where :user_id = user_id", nativeQuery = true)
     List<BillModal> findBillsByIdUser(@Param("user_id") int user_id);
 

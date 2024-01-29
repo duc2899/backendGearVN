@@ -16,6 +16,7 @@ public class PreviewImageModal {
     private int id;
 
     private String image;
+    private String idImage;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_product")
     private ProductModal productModal;

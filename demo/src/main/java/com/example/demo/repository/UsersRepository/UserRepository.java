@@ -17,14 +17,19 @@ public interface UserRepository extends JpaRepository<UserModal, Integer> {
     Optional<UserModal> findUserByName  (@Param("name") String name);
 
     @Query(value = "select * from gearvn.users where email = :email", nativeQuery = true)
-    Optional<UserModal> findUserByEmailOptional (@Param("email") String email);
+    Optional<UserModal> findUserByEmailOptional(@Param("email") String email);
 
     @Query(value = "select * from gearvn.users where email = :email", nativeQuery = true)
-     UserModal findUserByEmail  (@Param("email") String email);
+    UserModal findUserByEmail(@Param("email") String email);
 
     @Query(value = "select * from gearvn.users where email = :email and password = :password", nativeQuery = true)
-    Optional<UserModal> findUserByEmailAndPass  (@Param("email") String email, @Param("password") String password);
+    Optional<UserModal> findUserByEmailAndPass(@Param("email") String email, @Param("password") String password);
+
+    @Query(value = "select * from gearvn.users where id_user = :id_user and password = :password", nativeQuery = true)
+    Optional<UserModal> findUserByIDAndPass(@Param("id_user") int id_user, @Param("password") String password);
 
     @Query(value = "select * from gearvn.users where name = :name and password = :password", nativeQuery = true)
-    Optional<UserModal> findUserByNameAndPass  (@Param("name") String name, @Param("password") String password);
+    Optional<UserModal> findUserByNameAndPass(@Param("name") String name, @Param("password") String password);
+
+    boolean existsByEmail(String email);
 }

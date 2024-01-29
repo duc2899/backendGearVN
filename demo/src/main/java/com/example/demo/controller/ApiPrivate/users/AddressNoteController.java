@@ -3,10 +3,8 @@ package com.example.demo.controller.ApiPrivate.users;
 import com.example.demo.DTO.AcccountDTO.AddressNoteDTO.AddressNoteRequestDTO;
 import com.example.demo.DTO.AcccountDTO.AddressNoteDTO.DeleteAddressNoteRequestDTO;
 import com.example.demo.DTO.AcccountDTO.AddressNoteDTO.EditAddressNoteRequestDTO;
-import com.example.demo.DTO.AcccountDTO.AddressNoteDTO.GetAddressNoteByIdUserRequestDTO;
 import com.example.demo.service.AddressNoteService.AddressNoteService;
 import com.example.demo.utilities.ResponseHandel;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,23 +22,24 @@ public class AddressNoteController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addAddressNote(@Valid @RequestBody AddressNoteRequestDTO addressNoteRequestDTO) {
-        if (Objects.equals(addressNoteService.addAddressNote(addressNoteRequestDTO), "success")) {
-            return ResponseHandel.generateResponse("success", HttpStatus.OK, addressNoteService.getAddressNoteForUser(addressNoteRequestDTO.getIdUser()));
+    public ResponseEntity<Object> addAddressNote(@RequestBody AddressNoteRequestDTO addressNoteRequestDTO) {
+        String message = addressNoteService.addAddressNote(addressNoteRequestDTO);
+        if (Objects.equals(message, "success")) {
+            return ResponseHandel.generateResponse("success", HttpStatus.OK, null);
         } else {
-            return ResponseHandel.generateResponse(addressNoteService.addAddressNote(addressNoteRequestDTO), HttpStatus.BAD_REQUEST, null);
+            return ResponseHandel.generateResponse(message, HttpStatus.BAD_REQUEST, null);
         }
     }
 
-    @GetMapping
-    public ResponseEntity<Object> getAllAddressNoteByIdUser(@RequestBody GetAddressNoteByIdUserRequestDTO getAddressNoteByIdUserRequestDTO) {
-        return ResponseHandel.generateResponse("success", HttpStatus.OK, addressNoteService.getAddressNoteForUser(getAddressNoteByIdUserRequestDTO.getIdUser()));
+    @GetMapping("/{idUser}")
+    public ResponseEntity<Object> getAllAddressNoteByIdUser(@PathVariable int idUser) {
+        return ResponseHandel.generateResponse("success", HttpStatus.OK, addressNoteService.getAddressNoteForUser(idUser));
     }
 
     @DeleteMapping
-    public ResponseEntity<Object> deleteAddressNote(@Valid @RequestBody DeleteAddressNoteRequestDTO deleteAddressNoteRequestDTO) {
+    public ResponseEntity<Object> deleteAddressNote(@RequestBody DeleteAddressNoteRequestDTO deleteAddressNoteRequestDTO) {
         if (Objects.equals(addressNoteService.deleteAddressNote(deleteAddressNoteRequestDTO), "success")) {
-            return ResponseHandel.generateResponse("success", HttpStatus.OK, addressNoteService.getAddressNoteForUser(deleteAddressNoteRequestDTO.getIdUser()));
+            return ResponseHandel.generateResponse("success", HttpStatus.OK, null);
         }
         return ResponseHandel.generateResponse(addressNoteService.deleteAddressNote(deleteAddressNoteRequestDTO), HttpStatus.BAD_REQUEST, null);
     }
@@ -48,7 +47,7 @@ public class AddressNoteController {
     @PutMapping
     public ResponseEntity<Object> editAddressNote(@RequestBody EditAddressNoteRequestDTO editAddressNoteRequestDTO) {
         if (Objects.equals(addressNoteService.editAddressNote(editAddressNoteRequestDTO), "success")) {
-            return ResponseHandel.generateResponse("success edit", HttpStatus.OK, addressNoteService.getAddressNoteForUser(editAddressNoteRequestDTO.getIdUser()));
+            return ResponseHandel.generateResponse("success edit", HttpStatus.OK, null);
         }
         return ResponseHandel.generateResponse(addressNoteService.editAddressNote(editAddressNoteRequestDTO), HttpStatus.BAD_REQUEST, null);
     }

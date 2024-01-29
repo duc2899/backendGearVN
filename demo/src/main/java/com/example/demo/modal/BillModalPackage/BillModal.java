@@ -42,6 +42,9 @@ public class BillModal {
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
+    @Enumerated(EnumType.STRING)
+    private SexType sexType;
+
     @Column(name = "isPay")
     private Boolean isPay;
 
@@ -51,11 +54,11 @@ public class BillModal {
     @Column(name = "statusOrder")
     private int statusOrder;
 
-    @Column(name = "totalPrice")
-    private double totalPrice;
+    @Column(name = "priceTemporary")
+    private double priceTemporary;
 
-    @Column(name = "applyDiscountCode")
-    private String applyDiscountCode;
+    @Column(name = "priceDiscount")
+    private double priceDiscount;
 
     @Column(name = "isCancelOrder")
     private Boolean isCancelOrder;
@@ -63,7 +66,6 @@ public class BillModal {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private UserModal userBill;
-
 
     @OneToMany(mappedBy = "orderBill", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<OrderModal> orderProduct = new HashSet<>();

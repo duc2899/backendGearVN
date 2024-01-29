@@ -4,12 +4,14 @@ import com.example.demo.DTO.BillDTO.BillResponseDTO;
 import com.example.demo.DTO.BillDTO.ItemResponseBillDTO;
 import com.example.demo.modal.BillModalPackage.BillModal;
 import com.example.demo.modal.ProductModalPackage.ProductModal;
+import com.example.demo.modal.UserModalPackage.UserModal;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TransferBill {
-    public static BillResponseDTO toBillResponseDTO(BillModal billModal, List<ProductModal> productModals, List<Integer> amount) {
+    public static BillResponseDTO toBillResponseDTO(BillModal billModal, List<ProductModal> productModals, List<Integer> amount, UserModal userModal) {
+
         BillResponseDTO billResponseDTO = new BillResponseDTO();
         billResponseDTO.setId(billModal.getIdBill());
         billResponseDTO.setAddress(billModal.getAddress());
@@ -19,10 +21,14 @@ public class TransferBill {
         billResponseDTO.setPhoneNumber(billModal.getPhoneNumber());
         billResponseDTO.setPriceDelivery(billModal.getPriceDelivery());
         billResponseDTO.setCreatedDate(billModal.getCreatedDate());
-        billResponseDTO.setDiscountCode(billModal.getApplyDiscountCode());
-        billResponseDTO.setTotalPrice(billModal.getTotalPrice());
+        billResponseDTO.setDiscountPrice(billModal.getPriceDiscount());
+        billResponseDTO.setTotalPrice(billModal.getPriceTemporary() + billModal.getPriceDelivery() - billModal.getPriceDiscount());
         billResponseDTO.setStatusBill(billModal.getStatusOrder());
+        billResponseDTO.setSex(billModal.getSexType());
+        billResponseDTO.setEmail(userModal.getEmail());
+        billResponseDTO.setDiscountPrice(billModal.getPriceDiscount());
         billResponseDTO.setIsCancelOrder(billModal.getIsCancelOrder());
+        billResponseDTO.setTemporaryPrice(billModal.getPriceTemporary());
         List<ItemResponseBillDTO> itemResponseBillDTOS = new ArrayList<>();
         if (productModals != null && productModals.size() > 0) {
             int index = 0;

@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class DiscountCodeService {
@@ -20,12 +19,16 @@ public class DiscountCodeService {
         this.discountCodeRepository = discountCodeRepository;
     }
 
+    public GetListDCResponseDTO getDiscountCodeByCode(String code) {
+        DiscountCodeModal discountCodeModal = discountCodeRepository.findDiscountCodeByCode(code);
+        return TransferDiscountCode.toGetListDCResponseDTO(discountCodeModal);
+    }
 
     public String createDiscountCode(CreateDCRequestDTO createDCRequestDTO) {
         if (!isValid(createDCRequestDTO).equals("valid")) {
             return isValid(createDCRequestDTO);
         }
-        if (discountCodeRepository.findDiscountCodeByCodeOptional(createDCRequestDTO.getCode()).isEmpty()) {
+        if (discountCodeRepository.findDiscountCodeByCodeOptional(createDCRequestDTO.getCode()).isPresent()) {
             return "Discount code already exists";
         }
         if (!createDCRequestDTO.getExpiry().isAfter(LocalDateTime.now())) {
@@ -79,14 +82,14 @@ public class DiscountCodeService {
 
     public String checkDiscountCode(CheckDiscountCodeRequestDTO checkDiscountCodeRequestDTO) {
         if (discountCodeRepository.findDiscountCodeByCodeOptional(checkDiscountCodeRequestDTO.getCode()).isEmpty()) {
-            return "Invalid discount code";
+            return "Mã giảm giá không hợp lệ";
         }
         DiscountCodeModal discountCodeModal = discountCodeRepository.findDiscountCodeByCode(checkDiscountCodeRequestDTO.getCode());
         if (checkDiscountCodeRequestDTO.getPrice() < discountCodeModal.getCondition_price()) {
-            return "Product price is not appropriate";
+            return "Giá của sản phẩm không phù hợp";
         }
         if (!discountCodeModal.getExpiry().isAfter(LocalDateTime.now())) {
-            return "Code has expired";
+            return "Mã giảm giá đã hết hạn";
         }
         return "success";
     }

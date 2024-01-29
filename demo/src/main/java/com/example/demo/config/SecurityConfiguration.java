@@ -39,7 +39,7 @@ public class SecurityConfiguration {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedHeaders(Collections.singletonList("*"));
         config.setAllowedMethods(Collections.singletonList("*"));
-        config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+        config.setAllowedOrigins(Collections.singletonList("http://localhost:4000"));
         config.addExposedHeader("Authorization ");
         config.setAllowCredentials(Boolean.TRUE);
         config.setMaxAge(3600L);

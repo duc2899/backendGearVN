@@ -14,4 +14,5 @@ public class FeedbackRequestDTO {
     private int idUser;
     private String message;
     private int star;
+
 }

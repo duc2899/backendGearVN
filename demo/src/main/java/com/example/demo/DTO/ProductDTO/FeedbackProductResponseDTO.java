@@ -11,7 +11,4 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FeedbackProductResponseDTO {
     private int star;
-    private String name;
-    private String createdAt;
-    private String message;
 }
