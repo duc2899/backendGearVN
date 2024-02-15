@@ -13,7 +13,7 @@ public class TransferBill {
     public static BillResponseDTO toBillResponseDTO(BillModal billModal, List<ProductModal> productModals, List<Integer> amount, UserModal userModal) {
 
         BillResponseDTO billResponseDTO = new BillResponseDTO();
-        billResponseDTO.setId(billModal.getIdBill());
+        billResponseDTO.setId(billModal.getId_bill());
         billResponseDTO.setAddress(billModal.getAddress());
         billResponseDTO.setIsPay(billModal.getIsPay());
         billResponseDTO.setName(billModal.getName());
@@ -29,6 +29,7 @@ public class TransferBill {
         billResponseDTO.setDiscountPrice(billModal.getPriceDiscount());
         billResponseDTO.setIsCancelOrder(billModal.getIsCancelOrder());
         billResponseDTO.setTemporaryPrice(billModal.getPriceTemporary());
+        billResponseDTO.setNote(billModal.getNote());
         List<ItemResponseBillDTO> itemResponseBillDTOS = new ArrayList<>();
         if (productModals != null && productModals.size() > 0) {
             int index = 0;

@@ -3,6 +3,7 @@ package com.example.demo.service.ProductServices;
 import com.example.demo.DTO.ProductDTO.FindProductResponseDTO;
 import com.example.demo.DTO.ProductDTO.GetImagesBannerResponseDTO;
 import com.example.demo.DTO.ProductDTO.ListProductResponseDTO;
+import com.example.demo.DTO.ProductDTO.ProductKeyBoardDTO.KeyBoardProductRequestDTO;
 import com.example.demo.DTO.ProductDTO.ProductLaptopDTO.LaptopProductRequestDTO;
 import com.example.demo.DTO.ProductDTO.ProductMouseDTO.MouseProductRequestDTO;
 import com.example.demo.DTO.ProductDTO.ProductResponseDTO;
@@ -14,6 +15,7 @@ import com.example.demo.repository.ProductRepository.CategoryRepository;
 import com.example.demo.repository.ProductRepository.PreviewImageRepository;
 import com.example.demo.repository.ProductRepository.ProducerRepository;
 import com.example.demo.repository.ProductRepository.ProductRepository;
+import com.example.demo.utilities.TransferKeyBoardProduct;
 import com.example.demo.utilities.TransferMouseProduct;
 import com.example.demo.utilities.TransferUtilities;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +53,11 @@ public class ProductServices {
                 productResponseDTOS.add(TransferMouseProduct.toProductDTO(productModal, feedbackRepository, previewImageRepository));
             }
         }
+        if (Objects.equals(type, 3)) {
+            for (ProductModal productModal : listProduct) {
+                productResponseDTOS.add(TransferKeyBoardProduct.toProductKeyboardDTO(productModal, feedbackRepository, previewImageRepository));
+            }
+        }
         if (Objects.equals(type, 1)) {
             for (ProductModal productModal : listProduct) {
                 productResponseDTOS.add(TransferUtilities.toLaptopProductResponseDTO(productModal, feedbackRepository, previewImageRepository));
@@ -76,6 +83,9 @@ public class ProductServices {
             }
             if (type == 2 && productRepository.findProductById(id).getCategoryModal().getId_category() == type) {
                 return TransferMouseProduct.toProductDTO(productModal, feedbackRepository, previewImageRepository);
+            }
+            if (type == 3 && productRepository.findProductById(id).getCategoryModal().getId_category() == type) {
+                return TransferKeyBoardProduct.toProductKeyboardDTO(productModal, feedbackRepository, previewImageRepository);
             }
             return null;
         }
@@ -133,13 +143,16 @@ public class ProductServices {
 
     //  Laptop ----------------
 
-    public String addLaptopProduct(LaptopProductRequestDTO laptopProductRequestDTO) {
+    public ProductResponseDTO addLaptopProduct(LaptopProductRequestDTO laptopProductRequestDTO) {
         Optional<CategoryModal> categoryModal = categoryRepository.findById(laptopProductRequestDTO.getIdCategory());
         Optional<ProducerModal> producerModal = producerRepository.findById(laptopProductRequestDTO.getIdProducer());
+        if (producerModal.isEmpty() || categoryModal.isEmpty()) {
+            return null;
+        }
         ProductModal product = TransferUtilities.toLaptopProduct(laptopProductRequestDTO, categoryModal.get(), producerModal.get());
         product.setLaptopProperties(TransferUtilities.toLapTopProperties(laptopProductRequestDTO.getProperties(), product));
-        productRepository.save(product);
-        return "success";
+        ProductModal productModal = productRepository.save(product);
+        return TransferUtilities.toLaptopProductResponseDTO(productModal, feedbackRepository, previewImageRepository);
     }
 
     public String editLaptopProduct(int id, LaptopProductRequestDTO laptopProductRequestDTO) {
@@ -155,13 +168,20 @@ public class ProductServices {
 
     // Mouse ----------------
 
-    public String addMouseProduct(MouseProductRequestDTO mouseProductRequestDTO) {
+    public ProductResponseDTO addMouseProduct(MouseProductRequestDTO mouseProductRequestDTO) {
         Optional<CategoryModal> categoryModal = categoryRepository.findById(mouseProductRequestDTO.getIdCategory());
         Optional<ProducerModal> producerModal = producerRepository.findById(mouseProductRequestDTO.getIdProducer());
+        if (producerModal.isEmpty()) {
+            return null;
+        }
+        if (categoryModal.isEmpty()) {
+            return null;
+        }
         ProductModal productModal = TransferMouseProduct.toMouseProduct(mouseProductRequestDTO, categoryModal.get(), producerModal.get());
         productModal.setMouseProperties(TransferMouseProduct.toMouseProperties(mouseProductRequestDTO.getProperties(), productModal));
         productRepository.save(productModal);
-        return "success";
+        ProductModal product = productRepository.save(productModal);
+        return TransferMouseProduct.toProductDTO(product, feedbackRepository, previewImageRepository);
     }
 
     public String editMouseProduct(int id, MouseProductRequestDTO mouseProductRequestDTO) {
@@ -171,6 +191,31 @@ public class ProductServices {
         ProductModal prDB = productRepository.findProductById(id);
         TransferMouseProduct.toMouseProductDB(mouseProductRequestDTO, prDB);
         TransferMouseProduct.toMousePropertiesDB(mouseProductRequestDTO.getProperties(), prDB.getMouseProperties());
+        productRepository.save(prDB);
+        return "success";
+    }
+
+    // KeyBoard ----------------
+    public ProductResponseDTO addKeyBoardProduct(KeyBoardProductRequestDTO keyBoardProductRequestDTO) {
+        Optional<CategoryModal> categoryModal = categoryRepository.findById(keyBoardProductRequestDTO.getIdCategory());
+        Optional<ProducerModal> producerModal = producerRepository.findById(keyBoardProductRequestDTO.getIdProducer());
+        if (producerModal.isEmpty() || categoryModal.isEmpty()) {
+            return null;
+        }
+        ProductModal productModal = TransferKeyBoardProduct.toKeyBoardProduct(keyBoardProductRequestDTO, categoryModal.get(), producerModal.get());
+        productModal.setKeyboardProperties(TransferKeyBoardProduct.toKeyboardProperties(keyBoardProductRequestDTO.getProperties(), productModal));
+        productRepository.save(productModal);
+        ProductModal product = productRepository.save(productModal);
+        return TransferKeyBoardProduct.toProductKeyboardDTO(product, feedbackRepository, previewImageRepository);
+    }
+
+    public String editKeyboardProduct(int id, KeyBoardProductRequestDTO keyBoardProductRequestDTO) {
+        if (!productRepository.existsById(id)) {
+            return "Not found product";
+        }
+        ProductModal prDB = productRepository.findProductById(id);
+        TransferKeyBoardProduct.toKeyboardProductDB(keyBoardProductRequestDTO, prDB);
+        TransferKeyBoardProduct.toKeyboardPropertiesDB(keyBoardProductRequestDTO.getProperties(), prDB.getKeyboardProperties());
         productRepository.save(prDB);
         return "success";
     }

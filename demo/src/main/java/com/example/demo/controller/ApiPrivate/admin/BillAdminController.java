@@ -2,7 +2,6 @@ package com.example.demo.controller.ApiPrivate.admin;
 
 import com.example.demo.DTO.BillDTO.EditPaymentBillRequestDTO;
 import com.example.demo.DTO.BillDTO.EditStatusBillRequestDTO;
-import com.example.demo.DTO.BillDTO.FindBillByIdUserAndIdBillRequestDTO;
 import com.example.demo.service.BillService.BillService;
 import com.example.demo.utilities.ResponseHandel;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("api/public/admin/bill")
+@RequestMapping("api/private/admin/bill")
 @CrossOrigin(origins = "http://localhost:4000")
 public class BillAdminController {
     private final BillService billService;

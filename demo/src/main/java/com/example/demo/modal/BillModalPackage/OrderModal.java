@@ -26,8 +26,6 @@ public class OrderModal {
     private Set<ProductModal> productModals = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "idBill")
+    @JoinColumn(name = "id_bill")
     private BillModal orderBill;
-
-
 }

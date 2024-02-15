@@ -19,7 +19,7 @@ import java.util.Set;
 public class BillModal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idBill;
+    private int id_bill;
 
     @Column(name = "name")
     private String name;
@@ -62,6 +62,9 @@ public class BillModal {
 
     @Column(name = "isCancelOrder")
     private Boolean isCancelOrder;
+
+    @Column(name = "note")
+    private String note;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")

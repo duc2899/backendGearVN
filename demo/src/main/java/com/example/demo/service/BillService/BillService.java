@@ -23,6 +23,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -99,13 +100,14 @@ public class BillService {
         billModal.setAddress(billReq.getAddress());
         billModal.setName(billReq.getName());
         billModal.setPhoneNumber(billReq.getPhoneNumber());
-        billModal.setIsPay(billReq.getPay());
+        billModal.setIsPay(billReq.isPay());
         billModal.setStatusOrder(1);
         billModal.setPaymentType(billReq.getPaymentType());
         billModal.setPriceDelivery(billReq.getPriceDelivery());
         billModal.setPriceTemporary(calculatorTemporaryPrice(billReq));
         billModal.setIsCancelOrder(false);
         billModal.setSexType(billReq.getSex());
+        billModal.setNote(billReq.getNote());
 
         Optional<DiscountCodeModal> discountCodeModal = discountCodeRepository.findDiscountCodeByCodeOptional(billReq.getDiscountCode());
         if (discountCodeModal.isPresent()) {
@@ -277,6 +279,22 @@ public class BillService {
             throw new RuntimeException(exception);
         }
         return "send mail";
+    }
+
+    private int generateID() {
+        // Lấy ngày hiện tại
+        LocalDate currentDate = LocalDate.now();
+        // Chuyển đổi ngày hiện tại thành số nguyên có dạng YYYYMMDD
+        int dateInt = currentDate.getYear() * 10000 + currentDate.getMonthValue() * 100 + currentDate.getDayOfMonth();
+
+        // Sinh số ngẫu nhiên từ 1000 đến 9999
+        Random random = new Random();
+        int randomNumber = random.nextInt(9000) + 1000;
+
+        // Kết hợp ngày và số ngẫu nhiên để tạo ID
+        int generatedID = dateInt * 10000 + randomNumber;
+
+        return generatedID;
     }
 
 }

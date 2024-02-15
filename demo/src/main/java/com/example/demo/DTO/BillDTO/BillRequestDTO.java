@@ -32,6 +32,7 @@ public class BillRequestDTO {
     @NotNull(message = "idUser must not be null")
     private int idUser;
 
+    private String note;
     private String discountCode;
 
     @NotNull(message = "products must not be null")
@@ -55,11 +56,11 @@ public class BillRequestDTO {
         this.address = address;
     }
 
-    public Boolean getPay() {
+    public boolean isPay() {
         return isPay;
     }
 
-    public void setPay(Boolean pay) {
+    public void setPay(boolean pay) {
         isPay = pay;
     }
 
@@ -101,6 +102,14 @@ public class BillRequestDTO {
 
     public void setIdUser(int idUser) {
         this.idUser = idUser;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public String getDiscountCode() {

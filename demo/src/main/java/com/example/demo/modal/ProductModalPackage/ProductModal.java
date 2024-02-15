@@ -69,6 +69,10 @@ public class ProductModal {
     @JsonBackReference
     private LaptopProperties laptopProperties;
 
+    @OneToOne(mappedBy = "productKeyboard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
+    private KeyboardProperties keyboardProperties;
+
     @OneToMany(mappedBy = "productModal")
     private List<CartModal> cartModals;
 

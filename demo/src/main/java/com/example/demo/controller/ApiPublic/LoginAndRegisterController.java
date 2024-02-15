@@ -24,6 +24,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("api/public/auth")
 @CrossOrigin(origins = "http://localhost:3000")
+@Valid
 public class LoginAndRegisterController {
     private final AuthenticateServices authenticateServices;
     private final JwtService jwtService;
@@ -81,10 +82,11 @@ public class LoginAndRegisterController {
 
     @PostMapping("/login/admin")
     public ResponseEntity<Object> loginAdmin(@RequestBody LoginRequestDTO loginRequestDTO) {
-        if (Objects.equals(authenticateServices.checkLoginAdmin(loginRequestDTO), "success")) {
-            return ResponseHandel.generateResponse("Login Admin successfully", HttpStatus.OK, authenticateServices.login(loginRequestDTO));
+        String message = authenticateServices.checkLoginAdmin(loginRequestDTO);
+        if (Objects.equals(message, "success")) {
+            return ResponseHandel.generateResponse("Login Admin successfully", HttpStatus.OK, authenticateServices.loginAdmin(loginRequestDTO));
         } else {
-            return ResponseHandel.generateResponse(authenticateServices.checkLoginAdmin(loginRequestDTO), HttpStatus.NOT_FOUND, null);
+            return ResponseHandel.generateResponse(message, HttpStatus.NOT_FOUND, null);
         }
     }
 

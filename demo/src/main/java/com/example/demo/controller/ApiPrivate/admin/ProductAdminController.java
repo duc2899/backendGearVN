@@ -1,8 +1,10 @@
 package com.example.demo.controller.ApiPrivate.admin;
 
 import com.example.demo.DTO.CloudinaryDTO.DeleteCloudinaryRequestDTO;
+import com.example.demo.DTO.ProductDTO.ProductKeyBoardDTO.KeyBoardProductRequestDTO;
 import com.example.demo.DTO.ProductDTO.ProductLaptopDTO.LaptopProductRequestDTO;
 import com.example.demo.DTO.ProductDTO.ProductMouseDTO.MouseProductRequestDTO;
+import com.example.demo.DTO.ProductDTO.ProductResponseDTO;
 import com.example.demo.service.CloudinaryService.CloudinaryService;
 import com.example.demo.service.PreviewImageService.PreviewImageService;
 import com.example.demo.service.ProductServices.ProductServices;
@@ -80,26 +82,36 @@ public class ProductAdminController {
     @PostMapping("/deleteImage")
     public ResponseEntity<Object> deleteImage(@RequestBody DeleteCloudinaryRequestDTO deleteCloudinaryRequestDTO) throws IOException {
         cloudinaryService.delete(deleteCloudinaryRequestDTO.getId());
-
         return ResponseHandel.generateResponse("success save preview images", HttpStatus.OK, null);
     }
 
     @PostMapping("/addLaptopProduct")
     public ResponseEntity<Object> addProductLaptop(@RequestBody LaptopProductRequestDTO laptopProductRequestDTO) {
-        if (Objects.equals(productServices.addLaptopProduct(laptopProductRequestDTO), "success")) {
-            return ResponseHandel.generateResponse("successfully", HttpStatus.CREATED, null);
+        ProductResponseDTO productResponseDTO = productServices.addLaptopProduct(laptopProductRequestDTO);
+        if (productResponseDTO != null) {
+            return ResponseHandel.generateResponse("successfully", HttpStatus.CREATED, productResponseDTO);
         } else {
-            return ResponseHandel.generateResponse(productServices.addLaptopProduct(laptopProductRequestDTO), HttpStatus.BAD_REQUEST, null);
+            return ResponseHandel.generateResponse("fault", HttpStatus.BAD_REQUEST, null);
         }
     }
 
     @PostMapping("/addMouseProduct")
     public ResponseEntity<Object> addProductMouse(@RequestBody @Valid MouseProductRequestDTO mouseProductRequestDTO) {
-        String message = productServices.addMouseProduct(mouseProductRequestDTO);
-        if (Objects.equals(message, "success")) {
-            return ResponseHandel.generateResponse("successfully", HttpStatus.CREATED, null);
+        ProductResponseDTO productResponseDTO = productServices.addMouseProduct(mouseProductRequestDTO);
+        if (productResponseDTO != null) {
+            return ResponseHandel.generateResponse("successfully", HttpStatus.CREATED, productResponseDTO);
         } else {
-            return ResponseHandel.generateResponse(message, HttpStatus.BAD_REQUEST, null);
+            return ResponseHandel.generateResponse("fault", HttpStatus.BAD_REQUEST, null);
+        }
+    }
+
+    @PostMapping("/addKeyboardProduct")
+    public ResponseEntity<Object> addProductKeyboard(@RequestBody @Valid KeyBoardProductRequestDTO keyBoardProductRequestDTO) {
+        ProductResponseDTO productResponseDTO = productServices.addKeyBoardProduct(keyBoardProductRequestDTO);
+        if (productResponseDTO != null) {
+            return ResponseHandel.generateResponse("successfully", HttpStatus.CREATED, productResponseDTO);
+        } else {
+            return ResponseHandel.generateResponse("fault", HttpStatus.BAD_REQUEST, null);
         }
     }
 
@@ -115,10 +127,21 @@ public class ProductAdminController {
 
     @PutMapping("/editLaptopProduct/{id}")
     public ResponseEntity<Object> editProductLaptop(@RequestBody LaptopProductRequestDTO laptopProductRequestDTO, @PathVariable("id") int id) {
-        if (productServices.editLaptopProduct(id, laptopProductRequestDTO).equals("success")) {
+        String message = productServices.editLaptopProduct(id, laptopProductRequestDTO);
+        if (message.equals("success")) {
             return ResponseHandel.generateResponse("successfully", HttpStatus.OK, null);
         } else {
-            return ResponseHandel.generateResponse(productServices.editLaptopProduct(id, laptopProductRequestDTO), HttpStatus.BAD_REQUEST, null);
+            return ResponseHandel.generateResponse(message, HttpStatus.BAD_REQUEST, null);
+        }
+    }
+
+    @PutMapping("/editKeyboardProduct/{id}")
+    public ResponseEntity<Object> editProductKeyboard(@RequestBody KeyBoardProductRequestDTO keyBoardProductRequestDTO, @PathVariable("id") int id) {
+        String message = productServices.editKeyboardProduct(id, keyBoardProductRequestDTO);
+        if (message.equals("success")) {
+            return ResponseHandel.generateResponse("successfully", HttpStatus.OK, null);
+        } else {
+            return ResponseHandel.generateResponse(message, HttpStatus.BAD_REQUEST, null);
         }
     }
 

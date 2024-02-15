@@ -70,6 +70,20 @@ public class AuthenticateServices {
                 .build();
     }
 
+    public LoginAdminResponse loginAdmin(LoginRequestDTO loginRequestDTO) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword())
+        );
+        var user = userRepository.findUserByEmailOptional(loginRequestDTO.getEmail()).orElseThrow();
+        var jwtToken = jwtService.generateToken(user);
+        return LoginAdminResponse.builder()
+                .id(user.getId_user())
+                .name(user.getName())
+                .email(user.getEmail())
+                .token(jwtToken)
+                .build();
+    }
+
     public String checkLogin(LoginRequestDTO request) {
         if (userRepository.findUserByEmailAndPass(request.getEmail(), request.getPassword()).isEmpty()) {
             return "Username or password are incorrect";
@@ -99,14 +113,13 @@ public class AuthenticateServices {
 
     public String checkLoginAdmin(LoginRequestDTO requestDTO) {
         Optional<UserModal> userModal = userRepository.findUserByEmailAndPass(requestDTO.getEmail(), requestDTO.getPassword());
-
         if (userModal.isPresent()) {
             if (userModal.get().getRole() == Role.ADMIN) {
                 return "success";
             }
             return "Invalid Account";
         }
-        return "Invalid Account";
+        return "Username or Password are incorrect";
     }
 
     public String checkRegister(RegisterRequestDTO request) {

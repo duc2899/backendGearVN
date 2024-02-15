@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("api/public/admin/discountCode")
+@RequestMapping("api/private/admin/discountCode")
 @CrossOrigin(origins = "http://localhost:4000")
 public class DiscountCodeAdminController {
     private final DiscountCodeService discountCodeService;
@@ -28,25 +28,28 @@ public class DiscountCodeAdminController {
 
     @PostMapping
     public ResponseEntity<Object> createDiscountCode(@RequestBody CreateDCRequestDTO createDCRequestDTO) {
-        if (Objects.equals(discountCodeService.createDiscountCode(createDCRequestDTO), "success")) {
-            return ResponseHandel.generateResponse("success", HttpStatus.OK, discountCodeService.getListDCResponseDTOS());
+        String message = discountCodeService.createDiscountCode(createDCRequestDTO);
+        if (Objects.equals(message, "success")) {
+            return ResponseHandel.generateResponse("success", HttpStatus.CREATED, null);
         }
-        return ResponseHandel.generateResponse(discountCodeService.createDiscountCode(createDCRequestDTO), HttpStatus.BAD_REQUEST, null);
+        return ResponseHandel.generateResponse(message, HttpStatus.BAD_REQUEST, null);
     }
 
     @PutMapping
     public ResponseEntity<Object> editDiscountCode(@RequestBody EditDCRequestDTO editDCRequestDTO) {
-        if (Objects.equals(discountCodeService.editDiscountCode(editDCRequestDTO), "success")) {
+        String message = discountCodeService.editDiscountCode(editDCRequestDTO);
+        if (Objects.equals(message, "success")) {
             return ResponseHandel.generateResponse("success", HttpStatus.OK, discountCodeService.getListDCResponseDTOS());
         }
-        return ResponseHandel.generateResponse(discountCodeService.editDiscountCode(editDCRequestDTO), HttpStatus.BAD_REQUEST, null);
+        return ResponseHandel.generateResponse(message, HttpStatus.BAD_REQUEST, null);
     }
 
     @DeleteMapping
     public ResponseEntity<Object> deleteDiscountCode(@RequestBody DeleteDCRequestDTO deleteDCRequestDTO) {
-        if (Objects.equals(discountCodeService.deleteDiscountCode(deleteDCRequestDTO), "success")) {
+        String message = discountCodeService.deleteDiscountCode(deleteDCRequestDTO);
+        if (Objects.equals(message, "success")) {
             return ResponseHandel.generateResponse("success", HttpStatus.OK, discountCodeService.getListDCResponseDTOS());
         }
-        return ResponseHandel.generateResponse(discountCodeService.deleteDiscountCode(deleteDCRequestDTO), HttpStatus.BAD_REQUEST, null);
+        return ResponseHandel.generateResponse(message, HttpStatus.BAD_REQUEST, null);
     }
 }

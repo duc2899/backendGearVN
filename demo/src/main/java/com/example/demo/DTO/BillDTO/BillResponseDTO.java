@@ -28,6 +28,7 @@ public class BillResponseDTO {
     private double temporaryPrice;
     private double discountPrice;
     private Boolean isCancelOrder;
+    private String note;
     private int statusBill;
     private List<ItemResponseBillDTO> products;
 }

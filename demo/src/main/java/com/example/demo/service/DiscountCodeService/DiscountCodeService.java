@@ -55,13 +55,14 @@ public class DiscountCodeService {
         if (!isValid(editDCRequestDTO).equals("valid")) {
             return isValid(editDCRequestDTO);
         }
-        if (discountCodeRepository.findDiscountCodeByIdSpecial(editDCRequestDTO.getId(), editDCRequestDTO.getCode()).isEmpty()) {
+        DiscountCodeModal res = discountCodeRepository.findDiscountCodeById(editDCRequestDTO.getId());
+        if (!Objects.equals(res.getCode(), editDCRequestDTO.getCode()) && discountCodeRepository.findDiscountCodeByCodeOptional(editDCRequestDTO.getCode()).isPresent()) {
             return "Discount code already exists";
         }
         if (!editDCRequestDTO.getExpiry().isAfter(LocalDateTime.now())) {
             return "Code expiration invalid";
         }
-        DiscountCodeModal res = discountCodeRepository.findDiscountCodeById(editDCRequestDTO.getId());
+
 
         res.setExpiry(editDCRequestDTO.getExpiry());
         res.setReduce_price(editDCRequestDTO.getReduce_price());
@@ -96,10 +97,10 @@ public class DiscountCodeService {
 
     private String isValid(CreateDCRequestDTO createDCRequestDTO) {
         if (createDCRequestDTO.getCondition_price() <= 0) {
-            return "Condition price must be be greater than 0";
+            return "Condition price must be greater than 0";
         }
         if (createDCRequestDTO.getReduce_price() <= 0) {
-            return "Reduce price must be be greater than 0";
+            return "Reduce price must be greater than 0";
         }
         if (createDCRequestDTO.getExpiry().toString().equals("")) {
             return "Expiry is required";

@@ -29,6 +29,15 @@ public class ProductFeedbackService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
+    public List<FeedbackResponseAdmin> getAllProductFeedback() {
+        List<FeedbackResponseAdmin> result = new ArrayList<>();
+        List<FeedbackModal> list = feedbackRepository.findAll();
+        for (FeedbackModal feedbackModal : list) {
+            result.add(TransferFeedback.toFeedbackResponseAdmin(feedbackModal));
+        }
+        return result;
+    }
+
     public String createFeedback(FeedbackRequestDTO feedbackRequestDTO) {
         if (!userRepository.existsById(feedbackRequestDTO.getIdUser()) || !productRepository.existsById(feedbackRequestDTO.getIdProduct())) {
             return "Invalid user or product";
@@ -48,7 +57,6 @@ public class ProductFeedbackService {
         feedbackRepository.save(TransferFeedback.toFeedbackModal(feedbackRequestDTO, productModal, userModal));
         return "success";
     }
-
 
     public ListFeedBackResponseDTO getFeedbacksByProduct(int idProduct, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());

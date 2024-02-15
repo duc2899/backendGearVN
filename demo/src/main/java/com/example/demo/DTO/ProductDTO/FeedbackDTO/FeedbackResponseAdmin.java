@@ -9,10 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductFeedbackResponseDTO {
+public class FeedbackResponseAdmin {
     private int id;
-    private String createdDate;
+    private int idProduct;
+    private String product;
+    private String user;
+    private String image;
     private String message;
     private int star;
-    private String username;
+    private String createdDate;
 }

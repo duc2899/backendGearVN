@@ -15,8 +15,8 @@ public class MousePropertiesDTO {
     private boolean connection;
     @NotNull(message = "charger must be not null")
     private boolean charger;
-    @NotNull(message = "rbg must be not null")
-    private boolean rbg;
+    @NotNull(message = "rgb must be not null")
+    private boolean rgb;
     @NotNull(message = "color must be not null")
     @NotBlank(message = "color must be not blank")
     private String color;
@@ -53,12 +53,12 @@ public class MousePropertiesDTO {
         this.charger = charger;
     }
 
-    public boolean isRbg() {
-        return rbg;
+    public boolean isRgb() {
+        return rgb;
     }
 
-    public void setRbg(boolean rbg) {
-        this.rbg = rbg;
+    public void setRgb(boolean rgb) {
+        this.rgb = rgb;
     }
 
     public String getColor() {

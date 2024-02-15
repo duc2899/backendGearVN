@@ -23,10 +23,11 @@ public class FeedbackController {
 
     @PostMapping
     public ResponseEntity<Object> createFeedback(@RequestBody FeedbackRequestDTO feedbackRequestDTO) {
-        if (Objects.equals(productFeedbackService.createFeedback(feedbackRequestDTO), "success")) {
+        String message = productFeedbackService.createFeedback(feedbackRequestDTO);
+        if (Objects.equals(message, "success")) {
             return ResponseHandel.generateResponse("success", HttpStatus.OK, null);
         }
-        return ResponseHandel.generateResponse(productFeedbackService.createFeedback(feedbackRequestDTO), HttpStatus.BAD_REQUEST, null);
+        return ResponseHandel.generateResponse(message, HttpStatus.BAD_REQUEST, null);
     }
 
     @GetMapping("{id}")
@@ -36,18 +37,20 @@ public class FeedbackController {
 
     @DeleteMapping
     public ResponseEntity<Object> deleteFeedback(@RequestBody DeleteFeedbackRequestDTO deleteFeedbackRequestDTO) {
-        if (Objects.equals(productFeedbackService.deleteFeedbackProduct(deleteFeedbackRequestDTO), "success")) {
+        String message = productFeedbackService.deleteFeedbackProduct(deleteFeedbackRequestDTO);
+        if (Objects.equals(message, "success")) {
             return ResponseHandel.generateResponse("success", HttpStatus.OK, null);
         }
-        return ResponseHandel.generateResponse(productFeedbackService.deleteFeedbackProduct(deleteFeedbackRequestDTO), HttpStatus.NOT_FOUND, null);
+        return ResponseHandel.generateResponse(message, HttpStatus.NOT_FOUND, null);
     }
 
 
     @PutMapping
     public ResponseEntity<Object> editFeedback(@RequestBody EditFeedbackRequestDTO editFeedbackRequestDTO) {
-        if (Objects.equals(productFeedbackService.editFeedbackProduct(editFeedbackRequestDTO), "success")) {
+        String message = productFeedbackService.editFeedbackProduct(editFeedbackRequestDTO);
+        if (Objects.equals(message, "success")) {
             return ResponseHandel.generateResponse("success", HttpStatus.OK, null);
         }
-        return ResponseHandel.generateResponse(productFeedbackService.editFeedbackProduct(editFeedbackRequestDTO), HttpStatus.BAD_REQUEST, null);
+        return ResponseHandel.generateResponse(message, HttpStatus.BAD_REQUEST, null);
     }
 }

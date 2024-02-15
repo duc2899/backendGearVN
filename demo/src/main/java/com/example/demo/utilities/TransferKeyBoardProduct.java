@@ -2,14 +2,14 @@ package com.example.demo.utilities;
 
 import com.example.demo.DTO.ProductDTO.FeedbackProductResponseDTO;
 import com.example.demo.DTO.ProductDTO.PreviewImageResponseDTO;
-import com.example.demo.DTO.ProductDTO.ProductMouseDTO.MouseProductRequestDTO;
-import com.example.demo.DTO.ProductDTO.ProductMouseDTO.MousePropertiesDTO;
+import com.example.demo.DTO.ProductDTO.ProductKeyBoardDTO.KeyBoardProductRequestDTO;
+import com.example.demo.DTO.ProductDTO.ProductKeyBoardDTO.KeyBoardPropertiesDTO;
 import com.example.demo.DTO.ProductDTO.ProductResponseDTO;
 import com.example.demo.DTO.ProductDTO.PropertiesDTO;
 import com.example.demo.modal.CategoryPackage.CategoryModal;
 import com.example.demo.modal.FeedbackPackage.FeedbackModal;
 import com.example.demo.modal.ProducerPackage.ProducerModal;
-import com.example.demo.modal.ProductModalPackage.MouseProperties;
+import com.example.demo.modal.ProductModalPackage.KeyboardProperties;
 import com.example.demo.modal.ProductModalPackage.PreviewImageModal;
 import com.example.demo.modal.ProductModalPackage.ProductModal;
 import com.example.demo.repository.FeedbackRepository.FeedbackRepository;
@@ -19,37 +19,37 @@ import org.springframework.beans.BeanUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransferMouseProduct {
-    public TransferMouseProduct() {
+public class TransferKeyBoardProduct {
+    public TransferKeyBoardProduct() {
+
     }
 
-    public static ProductModal toMouseProduct(MouseProductRequestDTO mouseProductRequestDTO, CategoryModal categoryModal, ProducerModal producerModal) {
+    public static ProductModal toKeyBoardProduct(KeyBoardProductRequestDTO keyBoardProductRequestDTO, CategoryModal categoryModal, ProducerModal producerModal) {
         ProductModal productModal = new ProductModal();
         productModal.setCategoryModal(categoryModal);
         productModal.setProducerModal(producerModal);
-        BeanUtils.copyProperties(mouseProductRequestDTO, productModal);
+        BeanUtils.copyProperties(keyBoardProductRequestDTO, productModal);
         return productModal;
     }
 
-    public static MouseProperties toMouseProperties(MousePropertiesDTO mousePropertiesDTO, ProductModal productModal) {
-        MouseProperties mouseProperties = new MouseProperties();
-        BeanUtils.copyProperties(mousePropertiesDTO, mouseProperties);
-        mouseProperties.setProductMouse(productModal);
-        return mouseProperties;
+    public static KeyboardProperties toKeyboardProperties(KeyBoardPropertiesDTO keyBoardPropertiesDTO, ProductModal productModal) {
+        KeyboardProperties keyboardProperties = new KeyboardProperties();
+        BeanUtils.copyProperties(keyBoardPropertiesDTO, keyboardProperties);
+        keyboardProperties.setProductKeyboard(productModal);
+        return keyboardProperties;
     }
 
-    public static ProductModal toMouseProductDB(MouseProductRequestDTO mouseProductRequestDTO, ProductModal productModal) {
-        BeanUtils.copyProperties(mouseProductRequestDTO, productModal);
+    public static ProductModal toKeyboardProductDB(KeyBoardProductRequestDTO keyBoardPropertiesDTO, ProductModal productModal) {
+        BeanUtils.copyProperties(keyBoardPropertiesDTO, productModal);
         return productModal;
     }
 
-    public static MouseProperties toMousePropertiesDB(MousePropertiesDTO mousePropertiesDTO, MouseProperties mouseProperties) {
-        BeanUtils.copyProperties(mousePropertiesDTO, mouseProperties);
-        return mouseProperties;
+    public static KeyboardProperties toKeyboardPropertiesDB(KeyBoardPropertiesDTO keyBoardPropertiesDTO, KeyboardProperties keyboardProperties) {
+        BeanUtils.copyProperties(keyBoardPropertiesDTO, keyboardProperties);
+        return keyboardProperties;
     }
 
-    //
-    public static ProductResponseDTO toProductDTO(ProductModal productModal, FeedbackRepository feedbackRepository, PreviewImageRepository previewImageRepository) {
+    public static ProductResponseDTO toProductKeyboardDTO(ProductModal productModal, FeedbackRepository feedbackRepository, PreviewImageRepository previewImageRepository) {
         ProductResponseDTO productResponseDTO = new ProductResponseDTO();
 
         List<FeedbackProductResponseDTO> productFeedback = new ArrayList<>();
@@ -61,42 +61,42 @@ public class TransferMouseProduct {
         propertiesCharger.setIsPublic(true);
         propertiesCharger.setId(1);
         propertiesCharger.setName("charger");
-        propertiesCharger.setProperties(productModal.getMouseProperties().getCharger() ? "Có" : "Không");
+        propertiesCharger.setProperties(productModal.getKeyboardProperties().getCharger() ? "Có" : "Không");
         propertiesDTOS.add(propertiesCharger);
 
         PropertiesDTO propertiesRGB = new PropertiesDTO();
         propertiesRGB.setIsPublic(true);
         propertiesRGB.setId(2);
         propertiesRGB.setName("rgb");
-        propertiesRGB.setProperties(productModal.getMouseProperties().getRgb() ? "Có" : "Không");
+        propertiesRGB.setProperties(productModal.getKeyboardProperties().getRgb() ? "Có" : "Không");
         propertiesDTOS.add(propertiesRGB);
 
         PropertiesDTO propertiesConnection = new PropertiesDTO();
         propertiesConnection.setIsPublic(true);
         propertiesConnection.setId(3);
         propertiesConnection.setName("connection");
-        propertiesConnection.setProperties(productModal.getMouseProperties().getConnection() ? "Có" : "Không");
+        propertiesConnection.setProperties(productModal.getKeyboardProperties().getConnection() ? "Có" : "Không");
         propertiesDTOS.add(propertiesConnection);
 
         PropertiesDTO propertiesDPI = new PropertiesDTO();
         propertiesDPI.setIsPublic(false);
         propertiesDPI.setId(4);
-        propertiesDPI.setName("dpi");
-        propertiesDPI.setProperties(productModal.getMouseProperties().getDpi());
+        propertiesDPI.setName("expand");
+        propertiesDPI.setProperties(productModal.getKeyboardProperties().getExpand());
         propertiesDTOS.add(propertiesDPI);
 
         PropertiesDTO propertiesSize = new PropertiesDTO();
         propertiesSize.setIsPublic(false);
         propertiesSize.setId(5);
         propertiesSize.setName("size");
-        propertiesSize.setProperties(productModal.getMouseProperties().getSize());
+        propertiesSize.setProperties(productModal.getKeyboardProperties().getSize());
         propertiesDTOS.add(propertiesSize);
 
         PropertiesDTO propertiesColor = new PropertiesDTO();
         propertiesColor.setIsPublic(false);
         propertiesColor.setId(6);
         propertiesColor.setName("color");
-        propertiesColor.setProperties(productModal.getMouseProperties().getColor());
+        propertiesColor.setProperties(productModal.getKeyboardProperties().getColor());
         propertiesDTOS.add(propertiesColor);
 
         PropertiesDTO propertiesProducer = new PropertiesDTO();
@@ -105,6 +105,20 @@ public class TransferMouseProduct {
         propertiesProducer.setName("producer");
         propertiesProducer.setProperties(productModal.getProducerModal().getName_producer());
         propertiesDTOS.add(propertiesProducer);
+
+        PropertiesDTO propertiesMaterial = new PropertiesDTO();
+        propertiesMaterial.setIsPublic(false);
+        propertiesMaterial.setId(8);
+        propertiesMaterial.setName("material");
+        propertiesMaterial.setProperties(productModal.getKeyboardProperties().getMaterial());
+        propertiesDTOS.add(propertiesMaterial);
+
+        PropertiesDTO propertiesSwitches = new PropertiesDTO();
+        propertiesSwitches.setIsPublic(false);
+        propertiesSwitches.setId(9);
+        propertiesSwitches.setName("switches");
+        propertiesSwitches.setProperties(productModal.getKeyboardProperties().getSwitches());
+        propertiesDTOS.add(propertiesSwitches);
 
         List<FeedbackModal> feedbackModals = feedbackRepository.getFeedbacksByIdProduct(productModal.getId_product());
         for (FeedbackModal feedbackModal : feedbackModals) {

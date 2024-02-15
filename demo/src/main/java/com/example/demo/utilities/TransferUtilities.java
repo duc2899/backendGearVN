@@ -64,58 +64,65 @@ public class TransferUtilities {
         PropertiesDTO propertiesCPU = new PropertiesDTO();
         propertiesCPU.setIsPublic(true);
         propertiesCPU.setId(1);
-        propertiesCPU.setName("CPU");
+        propertiesCPU.setName("cpu");
         propertiesCPU.setProperties(productModal.getLaptopProperties().getCpu());
         propertiesDTOS.add(propertiesCPU);
 
         PropertiesDTO propertiesRam = new PropertiesDTO();
         propertiesRam.setIsPublic(true);
         propertiesRam.setId(2);
-        propertiesRam.setName("RAM");
+        propertiesRam.setName("ram");
         propertiesRam.setProperties(productModal.getLaptopProperties().getRam());
         propertiesDTOS.add(propertiesRam);
 
         PropertiesDTO propertiesVga = new PropertiesDTO();
         propertiesVga.setIsPublic(true);
         propertiesVga.setId(3);
-        propertiesVga.setName("VGA");
+        propertiesVga.setName("vga");
         propertiesVga.setProperties(productModal.getLaptopProperties().getVga());
         propertiesDTOS.add(propertiesVga);
 
         PropertiesDTO propertiesSsd = new PropertiesDTO();
         propertiesSsd.setIsPublic(true);
         propertiesSsd.setId(4);
-        propertiesSsd.setName("SSD");
+        propertiesSsd.setName("ssd");
         propertiesSsd.setProperties(productModal.getLaptopProperties().getSsd());
         propertiesDTOS.add(propertiesSsd);
 
         PropertiesDTO propertiesScreen = new PropertiesDTO();
         propertiesScreen.setIsPublic(true);
         propertiesScreen.setId(5);
-        propertiesScreen.setName("SCREEN");
+        propertiesScreen.setName("screen");
         propertiesScreen.setProperties(productModal.getLaptopProperties().getScreen());
         propertiesDTOS.add(propertiesScreen);
 
         PropertiesDTO propertiesSize = new PropertiesDTO();
         propertiesSize.setIsPublic(false);
         propertiesSize.setId(6);
-        propertiesSize.setName("SIZE");
+        propertiesSize.setName("size");
         propertiesSize.setProperties(productModal.getLaptopProperties().getSize());
         propertiesDTOS.add(propertiesSize);
 
         PropertiesDTO propertiesColor = new PropertiesDTO();
         propertiesColor.setIsPublic(false);
         propertiesColor.setId(7);
-        propertiesColor.setName("COLOR");
+        propertiesColor.setName("color");
         propertiesColor.setProperties(productModal.getLaptopProperties().getColor());
         propertiesDTOS.add(propertiesColor);
 
         PropertiesDTO propertiesOperatingSystem = new PropertiesDTO();
         propertiesOperatingSystem.setIsPublic(false);
         propertiesOperatingSystem.setId(8);
-        propertiesOperatingSystem.setName("OPERATINGSYSTEM");
+        propertiesOperatingSystem.setName("operatingSystem");
         propertiesOperatingSystem.setProperties(productModal.getLaptopProperties().getOperatingSystem());
         propertiesDTOS.add(propertiesOperatingSystem);
+
+        PropertiesDTO propertiesProducer = new PropertiesDTO();
+        propertiesProducer.setIsPublic(false);
+        propertiesProducer.setId(9);
+        propertiesProducer.setName("producer");
+        propertiesProducer.setProperties(productModal.getProducerModal().getName_producer());
+        propertiesDTOS.add(propertiesProducer);
 
         List<FeedbackModal> feedbackModals = feedbackRepository.getFeedbacksByIdProduct(productModal.getId_product());
         for (FeedbackModal feedbackModal : feedbackModals) {
