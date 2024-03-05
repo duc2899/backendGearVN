@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("api/private/admin/accountUsers")
-@CrossOrigin(origins = "**")
+@CrossOrigin(origins = "http://localhost:4000")
 public class AccountUserAdminController {
     private final AccountUserServices accountUserServices;
     private final AuthenticateServices authenticateServices;

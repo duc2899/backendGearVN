@@ -1,10 +1,12 @@
 package com.example.demo.controller.ApiPublic;
 
 import com.example.demo.DTO.ProductDTO.ProductResponseDTO;
+import com.example.demo.DTO.ProductDTO.SearchProductDTO.SearchProductKeyBoardRequestDTO;
 import com.example.demo.DTO.ProductDTO.SearchProductDTO.SearchProductLaptopRequestDTO;
 import com.example.demo.DTO.ProductDTO.SearchProductDTO.SearchProductMouseRequestDTO;
+import com.example.demo.controller.SearchServices.SearchService;
+import com.example.demo.modal.ProductModalPackage.ProductType;
 import com.example.demo.service.ProductServices.ProductServices;
-import com.example.demo.service.SearchServices.SearchService;
 import com.example.demo.utilities.ResponseHandel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/public/user/product")
+@CrossOrigin(origins = "**")
 public class ProductUserController {
     private final ProductServices productServices;
     private final SearchService searchService;
@@ -34,6 +37,11 @@ public class ProductUserController {
     @GetMapping("/mouse")
     public ResponseEntity<Object> getAllProductLaptop(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "1") int size) {
         return ResponseHandel.generateResponse("successfully", HttpStatus.OK, productServices.getAllProduct(page, size, 2));
+    }
+
+    @GetMapping("/keyboard")
+    public ResponseEntity<Object> getAllProductKeyBoard(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "1") int size) {
+        return ResponseHandel.generateResponse("successfully", HttpStatus.OK, productServices.getAllProduct(page, size, 3));
     }
 
     @GetMapping("/laptop/{id}")
@@ -66,14 +74,19 @@ public class ProductUserController {
         return ResponseHandel.generateResponse("success", HttpStatus.OK, searchService.searchProductLaptop(searchProductLaptopRequestDTO, page, size));
     }
 
+    @PostMapping("/search/keyboard")
+    public ResponseEntity<Object> searchProductKeyboard(@RequestBody SearchProductKeyBoardRequestDTO searchProductKeyBoardRequestDTO, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "1") int size) {
+        return ResponseHandel.generateResponse("success", HttpStatus.OK, searchService.searchProductKeyboard(searchProductKeyBoardRequestDTO, page, size));
+    }
+
     @PostMapping("/search/mouse")
     public ResponseEntity<Object> searchProductMouse(@RequestBody SearchProductMouseRequestDTO searchProductMouseRequestDTO, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "1") int size) {
         return ResponseHandel.generateResponse("success", HttpStatus.OK, searchService.searchProductMouse(searchProductMouseRequestDTO, page, size));
     }
 
-    @GetMapping("/sort/laptop")
-    public ResponseEntity<Object> sortProductLaptop(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "1") int size, @RequestParam String sort) {
-        return ResponseHandel.generateResponse("success", HttpStatus.OK, searchService.sortProduct(sort, page, size, 1));
+    @GetMapping("/sort/price")
+    public ResponseEntity<Object> sortProductLaptop(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "1") int size, @RequestParam ProductType type, @RequestParam String sort) {
+        return ResponseHandel.generateResponse("success", HttpStatus.OK, searchService.sortProduct(sort, page, size, type));
     }
 
 }

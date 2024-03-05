@@ -1,6 +1,7 @@
 package com.example.demo.controller.ApiPrivate.admin;
 
 import com.example.demo.DTO.CloudinaryDTO.DeleteCloudinaryRequestDTO;
+import com.example.demo.DTO.ProductDTO.DeleteProductRequestDTO;
 import com.example.demo.DTO.ProductDTO.ProductKeyBoardDTO.KeyBoardProductRequestDTO;
 import com.example.demo.DTO.ProductDTO.ProductLaptopDTO.LaptopProductRequestDTO;
 import com.example.demo.DTO.ProductDTO.ProductMouseDTO.MouseProductRequestDTO;
@@ -115,9 +116,9 @@ public class ProductAdminController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteProductLaptop(@PathVariable("id") int id) {
-        String message = productServices.removeProduct(id);
+    @DeleteMapping
+    public ResponseEntity<Object> deleteProduct(@RequestBody DeleteProductRequestDTO deleteProductRequestDTO) throws IOException {
+        String message = productServices.removeProduct(deleteProductRequestDTO);
         if (message.equals("success")) {
             return ResponseHandel.generateResponse("Delete successfully", HttpStatus.OK, null);
         } else {

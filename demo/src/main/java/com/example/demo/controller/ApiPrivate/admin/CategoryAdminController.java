@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/private/admin/category")
-@CrossOrigin(origins = "**")
+@CrossOrigin(origins = "http://localhost:4000")
 public class CategoryAdminController {
     private final CategoryServices categoryServices;
 

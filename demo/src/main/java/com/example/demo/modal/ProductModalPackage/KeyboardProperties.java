@@ -19,11 +19,11 @@ public class KeyboardProperties {
     @Column(name = "size")
     private String size;
     @Column(name = "connection")
-    private Boolean connection;
+    private String connection;
     @Column(name = "charger")
-    private Boolean charger;
+    private String charger;
     @Column(name = "rgb")
-    private Boolean rgb;
+    private String rgb;
     @Column(name = "color")
     private String color;
     @Column(name = "expand")

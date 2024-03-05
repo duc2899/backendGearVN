@@ -45,6 +45,9 @@ public class ProductModal {
     @OneToMany(mappedBy = "productModal", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PreviewImageModal> previewImageModals = new HashSet<>();
 
+    @OneToMany(mappedBy = "productModal", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FavoriteProductModal> favoriteProductModals = new HashSet<>();
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_category")
     private CategoryModal categoryModal;

@@ -2,18 +2,23 @@ package com.example.demo.service.AuthenticateService;
 
 import com.example.demo.DTO.AcccountDTO.*;
 import com.example.demo.config.JwtService;
+import com.example.demo.modal.UserModalPackage.RefreshTokenModal;
 import com.example.demo.modal.UserModalPackage.Role;
 import com.example.demo.modal.UserModalPackage.UserModal;
+import com.example.demo.repository.UsersRepository.ReFreshTokenRepository;
 import com.example.demo.repository.UsersRepository.UserRepository;
 import com.example.demo.service.CartServices.CartServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +28,14 @@ public class AuthenticateServices {
     private final PasswordEncoder passwordEncoder;
 
     private final JwtService jwtService;
+
     private final CartServices cartServices;
+    private final UserDetailsService userDetailsService;
 
     private final AuthenticationManager authenticationManager;
 
     private final UserRepository userRepository;
+    private final ReFreshTokenRepository reFreshTokenRepository;
 
     public RegisterResponseDTO register(RegisterRequestDTO request) {
         var user = UserModal.builder()
@@ -70,18 +78,48 @@ public class AuthenticateServices {
                 .build();
     }
 
-    public LoginAdminResponse loginAdmin(LoginRequestDTO loginRequestDTO) {
+    public LoginAdminResponse loginAdmin(LoginRequestDTO loginRequestDTO, boolean isCreateRefreshToken) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword())
         );
+
         var user = userRepository.findUserByEmailOptional(loginRequestDTO.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
+        RefreshTokenModal refreshTokenModal = new RefreshTokenModal();
+        if (isCreateRefreshToken) {
+            refreshTokenModal = crateReFreshToken(user.getEmail());
+        } else {
+            refreshTokenModal = reFreshTokenRepository.findTokenByIdUser(user.getId_user());
+        }
         return LoginAdminResponse.builder()
                 .id(user.getId_user())
                 .name(user.getName())
                 .email(user.getEmail())
-                .token(jwtToken)
+                .accessToken(jwtToken)
+                .refreshToken(refreshTokenModal.getToken())
                 .build();
+    }
+
+    private RefreshTokenModal crateReFreshToken(String email) {
+        RefreshTokenModal refreshTokenModal = RefreshTokenModal.builder()
+                .userRefreshToken(userRepository.findUserByEmail(email))
+                .token(UUID.randomUUID().toString())
+                .expiryDate(Instant.now().plusMillis(600000))
+                .build();
+        reFreshTokenRepository.save(refreshTokenModal);
+        return refreshTokenModal;
+    }
+
+    public RefreshTokenModal findByToken(String token) {
+        return reFreshTokenRepository.findByToken(token);
+    }
+
+    public RefreshTokenModal verifyExpiration(RefreshTokenModal refreshTokenModal) {
+        if (refreshTokenModal.getExpiryDate().compareTo(Instant.now()) < 0) {
+            reFreshTokenRepository.delete(refreshTokenModal);
+            return null;
+        }
+        return refreshTokenModal;
     }
 
     public String checkLogin(LoginRequestDTO request) {
@@ -148,6 +186,15 @@ public class AuthenticateServices {
         return "success";
     }
 
+    public String logOutAccount(LogOutAccountRequestDTO logOutAccountRequestDTO) {
+        RefreshTokenModal refreshTokenModal = reFreshTokenRepository.findTokenByIdUser(logOutAccountRequestDTO.getId());
+        if (refreshTokenModal == null) {
+            return "User not fount to logout";
+        }
+        reFreshTokenRepository.delete(refreshTokenModal);
+        return "success";
+    }
+
     private boolean checkSpace(String userName) {
         for (int i = 0; i < userName.length(); i++) {
             char kyTu = userName.charAt(i);
@@ -168,9 +215,7 @@ public class AuthenticateServices {
     private boolean isValidPhone(String str) {
         // regex for phonenumber vietnam
         String reg = "^(0|\\+84)(\\s|\\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\\d)(\\s|\\.)?(\\d{3})(\\s|\\.)?(\\d{3})$";
-
         return str.matches(reg);
-
     }
 
 }

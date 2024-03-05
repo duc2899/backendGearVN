@@ -61,21 +61,21 @@ public class TransferMouseProduct {
         propertiesCharger.setIsPublic(true);
         propertiesCharger.setId(1);
         propertiesCharger.setName("charger");
-        propertiesCharger.setProperties(productModal.getMouseProperties().getCharger() ? "Có" : "Không");
+        propertiesCharger.setProperties(productModal.getMouseProperties().getCharger());
         propertiesDTOS.add(propertiesCharger);
 
         PropertiesDTO propertiesRGB = new PropertiesDTO();
         propertiesRGB.setIsPublic(true);
         propertiesRGB.setId(2);
         propertiesRGB.setName("rgb");
-        propertiesRGB.setProperties(productModal.getMouseProperties().getRgb() ? "Có" : "Không");
+        propertiesRGB.setProperties(productModal.getMouseProperties().getRgb());
         propertiesDTOS.add(propertiesRGB);
 
         PropertiesDTO propertiesConnection = new PropertiesDTO();
         propertiesConnection.setIsPublic(true);
         propertiesConnection.setId(3);
         propertiesConnection.setName("connection");
-        propertiesConnection.setProperties(productModal.getMouseProperties().getConnection() ? "Có" : "Không");
+        propertiesConnection.setProperties(productModal.getMouseProperties().getConnection());
         propertiesDTOS.add(propertiesConnection);
 
         PropertiesDTO propertiesDPI = new PropertiesDTO();

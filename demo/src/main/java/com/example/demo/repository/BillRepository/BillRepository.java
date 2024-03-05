@@ -21,6 +21,9 @@ public interface BillRepository extends JpaRepository<BillModal, Integer> {
     @Query(value = "select * from gearvn.bills where :user_id = user_id and id_bill = :id_bill", nativeQuery = true)
     List<BillModal> findBillsByIdUserAndIdBill(@Param("user_id") int user_id, @Param("id_bill") int id_bill);
 
+    @Query(value = "select * from gearvn.bills where month(created_at) = :month", nativeQuery = true)
+    List<BillModal> findBillByMonth(@Param("month") int month);
+
     @Modifying
     @Transactional
     @Query(value = "update gearvn.bills set status_order = :status_order where id_bill = :id_bill", nativeQuery = true)

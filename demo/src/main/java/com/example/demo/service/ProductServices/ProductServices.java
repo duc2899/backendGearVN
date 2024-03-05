@@ -1,20 +1,17 @@
 package com.example.demo.service.ProductServices;
 
-import com.example.demo.DTO.ProductDTO.FindProductResponseDTO;
-import com.example.demo.DTO.ProductDTO.GetImagesBannerResponseDTO;
-import com.example.demo.DTO.ProductDTO.ListProductResponseDTO;
+import com.example.demo.DTO.ProductDTO.*;
 import com.example.demo.DTO.ProductDTO.ProductKeyBoardDTO.KeyBoardProductRequestDTO;
 import com.example.demo.DTO.ProductDTO.ProductLaptopDTO.LaptopProductRequestDTO;
 import com.example.demo.DTO.ProductDTO.ProductMouseDTO.MouseProductRequestDTO;
-import com.example.demo.DTO.ProductDTO.ProductResponseDTO;
 import com.example.demo.modal.CategoryPackage.CategoryModal;
 import com.example.demo.modal.ProducerPackage.ProducerModal;
+import com.example.demo.modal.ProductModalPackage.PreviewImageModal;
 import com.example.demo.modal.ProductModalPackage.ProductModal;
+import com.example.demo.modal.ProductModalPackage.ProductType;
 import com.example.demo.repository.FeedbackRepository.FeedbackRepository;
-import com.example.demo.repository.ProductRepository.CategoryRepository;
-import com.example.demo.repository.ProductRepository.PreviewImageRepository;
-import com.example.demo.repository.ProductRepository.ProducerRepository;
-import com.example.demo.repository.ProductRepository.ProductRepository;
+import com.example.demo.repository.ProductRepository.*;
+import com.example.demo.service.CloudinaryService.CloudinaryService;
 import com.example.demo.utilities.TransferKeyBoardProduct;
 import com.example.demo.utilities.TransferMouseProduct;
 import com.example.demo.utilities.TransferUtilities;
@@ -25,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,8 +37,12 @@ public class ProductServices {
     private final PreviewImageRepository previewImageRepository;
     private final ProducerRepository producerRepository;
 
-    //  General ----------------
+    private final LaptopPropertiesRepository laptopPropertiesRepository;
+    private final MousePropertiesRepository mousePropertiesRepository;
+    private final KeyboardPropertiesRepository keyboardPropertiesRepository;
 
+    private final CloudinaryService cloudinaryService;
+    //  General ----------------
 
     public ListProductResponseDTO getAllProduct(int pageNo, int pageSize, int type) {
 
@@ -133,14 +135,41 @@ public class ProductServices {
         return "success";
     }
 
-    public String removeProduct(int idLap) {
-        if (productRepository.existsById(idLap)) {
-            productRepository.deleteById(idLap);
-            return "success";
+    public String removeProduct(DeleteProductRequestDTO deleteProductRequestDTO) throws IOException {
+        if (!productRepository.existsById(deleteProductRequestDTO.getId())) {
+            return "Not found product";
         }
-        return "Not found product";
+        if (deleteProductRequestDTO.getType() == ProductType.laptop) {
+            laptopPropertiesRepository.deleteByIdProduct(deleteProductRequestDTO.getId());
+        }
+        if (deleteProductRequestDTO.getType() == ProductType.mouse) {
+            mousePropertiesRepository.deleteByIdProduct(deleteProductRequestDTO.getId());
+        }
+        if (deleteProductRequestDTO.getType() == ProductType.keyboard) {
+            keyboardPropertiesRepository.deleteByIdProduct(deleteProductRequestDTO.getId());
+        }
+        List<PreviewImageModal> imageModalList = previewImageRepository.findPreviewImageByID(deleteProductRequestDTO.getId());
+        for (PreviewImageModal previewImageModal : imageModalList) {
+            cloudinaryService.delete(previewImageModal.getIdImage());
+        }
+        previewImageRepository.deleteByIdProduct(deleteProductRequestDTO.getId());
+        productRepository.deleteByIdProduct(deleteProductRequestDTO.getId());
+        return "success";
     }
 
+    public List<ProductDashBoardResponseDTO> getProductDashBoard() {
+        List<ProductModal> productModalList = productRepository.getProductByDESC();
+        List<ProductDashBoardResponseDTO> result = new ArrayList<>();
+
+        for (ProductModal productModal : productModalList) {
+            ProductDashBoardResponseDTO productDashBoardResponseDTO = new ProductDashBoardResponseDTO();
+            productDashBoardResponseDTO.setPrice(productModal.getOldPrice() * ((100 - productModal.getSaleRate() * 100) / 100));
+            productDashBoardResponseDTO.setName(productModal.getTitle());
+            productDashBoardResponseDTO.setImage(productModal.getImage());
+            result.add(productDashBoardResponseDTO);
+        }
+        return result;
+    }
     //  Laptop ----------------
 
     public ProductResponseDTO addLaptopProduct(LaptopProductRequestDTO laptopProductRequestDTO) {

@@ -1,10 +1,8 @@
 package com.example.demo.controller.ApiPublic;
 
-import com.example.demo.DTO.AcccountDTO.CheckTokenExpiredDTO;
-import com.example.demo.DTO.AcccountDTO.GetInformationUserRequestDTO;
-import com.example.demo.DTO.AcccountDTO.LoginRequestDTO;
-import com.example.demo.DTO.AcccountDTO.RegisterRequestDTO;
+import com.example.demo.DTO.AcccountDTO.*;
 import com.example.demo.config.JwtService;
+import com.example.demo.modal.UserModalPackage.RefreshTokenModal;
 import com.example.demo.service.AuthenticateService.AuthenticateServices;
 import com.example.demo.utilities.ResponseHandel;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +21,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("api/public/auth")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:4000")
 @Valid
 public class LoginAndRegisterController {
     private final AuthenticateServices authenticateServices;
@@ -71,9 +69,9 @@ public class LoginAndRegisterController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Object> logoutPage(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Object> logoutPage(@RequestBody LogOutAccountRequestDTO logOutAccountRequestDTO, HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
+        if (auth != null && Objects.equals(authenticateServices.logOutAccount(logOutAccountRequestDTO), "success")) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
             return ResponseHandel.generateResponse("Logout success", HttpStatus.OK, null);
         }
@@ -84,7 +82,7 @@ public class LoginAndRegisterController {
     public ResponseEntity<Object> loginAdmin(@RequestBody LoginRequestDTO loginRequestDTO) {
         String message = authenticateServices.checkLoginAdmin(loginRequestDTO);
         if (Objects.equals(message, "success")) {
-            return ResponseHandel.generateResponse("Login Admin successfully", HttpStatus.OK, authenticateServices.loginAdmin(loginRequestDTO));
+            return ResponseHandel.generateResponse("Login Admin successfully", HttpStatus.OK, authenticateServices.loginAdmin(loginRequestDTO, true));
         } else {
             return ResponseHandel.generateResponse(message, HttpStatus.NOT_FOUND, null);
         }
@@ -98,5 +96,20 @@ public class LoginAndRegisterController {
             return ResponseHandel.generateResponse("success", HttpStatus.OK, null);
         }
         return ResponseHandel.generateResponse("expired token", HttpStatus.BAD_REQUEST, null);
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<Object> refreshToken(@RequestBody ReFreshTokenRequest request) {
+        RefreshTokenModal refreshTokenModal = authenticateServices.findByToken(request.getToken());
+        if (refreshTokenModal == null) {
+            return ResponseHandel.generateResponse("Refresh token invalid", HttpStatus.BAD_REQUEST, null);
+        }
+        if (authenticateServices.verifyExpiration(refreshTokenModal) == null) {
+            return ResponseHandel.generateResponse("Refresh token expired", HttpStatus.BAD_REQUEST, null);
+        }
+        LoginRequestDTO loginRequestDTO = new LoginRequestDTO();
+        loginRequestDTO.setEmail(refreshTokenModal.getUserRefreshToken().getEmail());
+        loginRequestDTO.setPassword(refreshTokenModal.getUserRefreshToken().getPassword());
+        return ResponseHandel.generateResponse("success", HttpStatus.OK, authenticateServices.loginAdmin(loginRequestDTO, false));
     }
 }

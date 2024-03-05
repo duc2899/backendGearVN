@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("api/public")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "**")
 public class ForgotAndActiveController {
     public final AccountUserServices accountUserServices;
 

@@ -61,21 +61,21 @@ public class TransferKeyBoardProduct {
         propertiesCharger.setIsPublic(true);
         propertiesCharger.setId(1);
         propertiesCharger.setName("charger");
-        propertiesCharger.setProperties(productModal.getKeyboardProperties().getCharger() ? "Có" : "Không");
+        propertiesCharger.setProperties(productModal.getKeyboardProperties().getCharger());
         propertiesDTOS.add(propertiesCharger);
 
         PropertiesDTO propertiesRGB = new PropertiesDTO();
         propertiesRGB.setIsPublic(true);
         propertiesRGB.setId(2);
         propertiesRGB.setName("rgb");
-        propertiesRGB.setProperties(productModal.getKeyboardProperties().getRgb() ? "Có" : "Không");
+        propertiesRGB.setProperties(productModal.getKeyboardProperties().getRgb());
         propertiesDTOS.add(propertiesRGB);
 
         PropertiesDTO propertiesConnection = new PropertiesDTO();
         propertiesConnection.setIsPublic(true);
         propertiesConnection.setId(3);
         propertiesConnection.setName("connection");
-        propertiesConnection.setProperties(productModal.getKeyboardProperties().getConnection() ? "Có" : "Không");
+        propertiesConnection.setProperties(productModal.getKeyboardProperties().getConnection());
         propertiesDTOS.add(propertiesConnection);
 
         PropertiesDTO propertiesDPI = new PropertiesDTO();

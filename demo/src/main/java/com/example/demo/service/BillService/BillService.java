@@ -23,7 +23,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -148,6 +147,7 @@ public class BillService {
         }
 
         if (handelDeleteCart(productModals, billReq.getIdUser()).equals("fault")) {
+            System.out.println("hehi----------------");
             return null;
         }
         sendEmail(billDB);
@@ -281,20 +281,5 @@ public class BillService {
         return "send mail";
     }
 
-    private int generateID() {
-        // Lấy ngày hiện tại
-        LocalDate currentDate = LocalDate.now();
-        // Chuyển đổi ngày hiện tại thành số nguyên có dạng YYYYMMDD
-        int dateInt = currentDate.getYear() * 10000 + currentDate.getMonthValue() * 100 + currentDate.getDayOfMonth();
-
-        // Sinh số ngẫu nhiên từ 1000 đến 9999
-        Random random = new Random();
-        int randomNumber = random.nextInt(9000) + 1000;
-
-        // Kết hợp ngày và số ngẫu nhiên để tạo ID
-        int generatedID = dateInt * 10000 + randomNumber;
-
-        return generatedID;
-    }
 
 }

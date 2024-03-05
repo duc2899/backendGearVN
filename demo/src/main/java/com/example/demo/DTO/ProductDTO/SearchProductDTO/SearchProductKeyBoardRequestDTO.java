@@ -11,8 +11,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SearchProductMouseRequestDTO {
-    private List<String> dpi;
+public class SearchProductKeyBoardRequestDTO {
+    private List<String> switches;
+    private List<String> material;
+    private List<String> expand;
     private List<String> size;
     private List<String> connection;
     private List<String> charger;

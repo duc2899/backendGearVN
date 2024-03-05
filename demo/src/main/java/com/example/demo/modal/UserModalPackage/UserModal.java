@@ -4,6 +4,7 @@ import com.example.demo.modal.AddressNotePackage.AddressNoteModal;
 import com.example.demo.modal.BillModalPackage.BillModal;
 import com.example.demo.modal.CartPackage.CartModal;
 import com.example.demo.modal.FeedbackPackage.FeedbackModal;
+import com.example.demo.modal.ProductModalPackage.FavoriteProductModal;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.context.annotation.Configuration;
@@ -67,6 +68,12 @@ public class UserModal implements UserDetails {
 
     @OneToOne(mappedBy = "userOTP")
     private OTPModal otpModal;
+
+    @OneToOne(mappedBy = "userRefreshToken")
+    private RefreshTokenModal refreshTokenModal;
+
+    @OneToMany(mappedBy = "userModal", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FavoriteProductModal> favoriteProductModals = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

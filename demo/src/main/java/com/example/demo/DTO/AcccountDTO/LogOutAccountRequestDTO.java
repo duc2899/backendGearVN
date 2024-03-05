@@ -6,13 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class LoginAdminResponse {
+@NoArgsConstructor
+@Builder
+public class LogOutAccountRequestDTO {
     private int id;
-    private String name;
-    private String email;
-    private String accessToken;
-    private String refreshToken;
 }

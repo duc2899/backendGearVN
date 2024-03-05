@@ -31,7 +31,7 @@ public class FeedbackModal {
     @PrePersist
     public void calculateDate() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        createdDate = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy").format(timestamp);
+        createdDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timestamp);
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)

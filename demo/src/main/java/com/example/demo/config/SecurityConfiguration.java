@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -27,7 +28,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(config -> getCoresConfig()))
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers("**", "/resources/**, **/swagger-ui.html").permitAll()
+                        request.requestMatchers("**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
@@ -36,10 +37,11 @@ public class SecurityConfiguration {
     }
 
     private CorsConfiguration getCoresConfig() {
+        List<String> listURl = List.of("http://localhost:4000", "http://localhost:3000");
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedHeaders(Collections.singletonList("*"));
         config.setAllowedMethods(Collections.singletonList("*"));
-        config.setAllowedOrigins(Collections.singletonList("http://localhost:4000"));
+        config.setAllowedOrigins(listURl);
         config.addExposedHeader("Authorization ");
         config.setAllowCredentials(Boolean.TRUE);
         config.setMaxAge(3600L);
