@@ -31,5 +31,7 @@ public interface UserRepository extends JpaRepository<UserModal, Integer> {
     @Query(value = "select * from gearvn.users where name = :name and password = :password", nativeQuery = true)
     Optional<UserModal> findUserByNameAndPass(@Param("name") String name, @Param("password") String password);
 
+    UserModal findByVerifyCode(String verifyCode);
+
     boolean existsByEmail(String email);
 }

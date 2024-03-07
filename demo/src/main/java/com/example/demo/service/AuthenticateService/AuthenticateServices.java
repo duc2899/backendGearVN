@@ -2,16 +2,23 @@ package com.example.demo.service.AuthenticateService;
 
 import com.example.demo.DTO.AcccountDTO.*;
 import com.example.demo.config.JwtService;
+import com.example.demo.modal.AddressNotePackage.LoginType;
 import com.example.demo.modal.UserModalPackage.RefreshTokenModal;
 import com.example.demo.modal.UserModalPackage.Role;
 import com.example.demo.modal.UserModalPackage.UserModal;
 import com.example.demo.repository.UsersRepository.ReFreshTokenRepository;
 import com.example.demo.repository.UsersRepository.UserRepository;
 import com.example.demo.service.CartServices.CartServices;
+import com.example.demo.utilities.GenerateRandomCode;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +37,17 @@ public class AuthenticateServices {
     private final JwtService jwtService;
 
     private final CartServices cartServices;
-    private final UserDetailsService userDetailsService;
 
     private final AuthenticationManager authenticationManager;
 
     private final UserRepository userRepository;
     private final ReFreshTokenRepository reFreshTokenRepository;
+
+    @Value("${spring.mail.username}")
+    private String formEmail;
+    @Autowired
+    private JavaMailSender javaMailSender;
+
 
     public RegisterResponseDTO register(RegisterRequestDTO request) {
         var user = UserModal.builder()
@@ -45,11 +57,15 @@ public class AuthenticateServices {
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
                 .isActive(true)
+                .isEnable(request.getType() != LoginType.NORMAL)
+                .verifyCode(GenerateRandomCode.generateRandomCode(20))
                 .build();
         userRepository.save(user);
 
         UserModal getUser = userRepository.findUserByEmail(request.getEmail());
-
+        if (request.getType() == LoginType.NORMAL) {
+            sendEmail(getUser);
+        }
         return RegisterResponseDTO.builder()
                 .id(getUser.getId_user())
                 .name(getUser.getName())
@@ -75,6 +91,7 @@ public class AuthenticateServices {
                 .phoneNumber(user.getPhoneNumber())
                 .role(user.getRole())
                 .cart(cartServices.getCartUser(user.getId_user()))
+                .type(request.getType())
                 .build();
     }
 
@@ -100,11 +117,32 @@ public class AuthenticateServices {
                 .build();
     }
 
+    public LoginResponseDTO loginWithGoogle(LoginWithGoogleRequestDTO login) {
+        LoginRequestDTO loginRequestDTO = new LoginRequestDTO();
+        loginRequestDTO.setType(LoginType.GOOGLE);
+        if (!userRepository.existsByEmail(login.getEmail())) {
+            RegisterRequestDTO registerRequestDTO = new RegisterRequestDTO();
+            registerRequestDTO.setEmail(login.getEmail());
+            registerRequestDTO.setName(login.getName());
+            registerRequestDTO.setPassword("");
+            registerRequestDTO.setPhoneNumber("");
+            registerRequestDTO.setType(LoginType.GOOGLE);
+            UserModal userModal = userRepository.findUserByEmail(register(registerRequestDTO).getEmail());
+            loginRequestDTO.setEmail(userModal.getEmail());
+            loginRequestDTO.setPassword(userModal.getPassword());
+        } else {
+            UserModal userModal = userRepository.findUserByEmail(login.getEmail());
+            loginRequestDTO.setPassword(userModal.getPassword());
+            loginRequestDTO.setEmail(userModal.getEmail());
+        }
+        return login(loginRequestDTO);
+    }
+
     private RefreshTokenModal crateReFreshToken(String email) {
         RefreshTokenModal refreshTokenModal = RefreshTokenModal.builder()
                 .userRefreshToken(userRepository.findUserByEmail(email))
                 .token(UUID.randomUUID().toString())
-                .expiryDate(Instant.now().plusMillis(600000))
+                .expiryDate(Instant.now().plusMillis(10800000))
                 .build();
         reFreshTokenRepository.save(refreshTokenModal);
         return refreshTokenModal;
@@ -123,8 +161,12 @@ public class AuthenticateServices {
     }
 
     public String checkLogin(LoginRequestDTO request) {
+
         if (userRepository.findUserByEmailAndPass(request.getEmail(), request.getPassword()).isEmpty()) {
             return "Username or password are incorrect";
+        }
+        if (!userRepository.findUserByEmailOptional(request.getEmail()).get().getIsEnable()) {
+            return "Your account has not been activated";
         }
         if (!userRepository.findUserByEmailOptional(request.getEmail()).get().getIsActive()) {
             return "Your account has been locked";
@@ -195,6 +237,17 @@ public class AuthenticateServices {
         return "success";
     }
 
+    public String checkVerifyCode(VerifyCodeRequestDTO verifyCodeRequestDTO) {
+        UserModal userModal = userRepository.findByVerifyCode(verifyCodeRequestDTO.getCode());
+        if (userModal != null) {
+            userModal.setIsEnable(true);
+            userRepository.save(userModal);
+            return "success";
+        } else {
+            return "Not found verifyCode";
+        }
+    }
+
     private boolean checkSpace(String userName) {
         for (int i = 0; i < userName.length(); i++) {
             char kyTu = userName.charAt(i);
@@ -218,5 +271,24 @@ public class AuthenticateServices {
         return str.matches(reg);
     }
 
+    private void sendEmail(UserModal userModal) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false);
+            mimeMessageHelper.setFrom(formEmail);
+            String body = "<html><body>" +
+                    "<div>" +
+                    "<img src='https://dxwd4tssreb4w.cloudfront.net/image/2725bf58c911e9180b2fbe8126615df5' style='width: 200px'/>" +
+                    "<p>Xin chào " + userModal.getUsername() + " Bạn đã tạo tài khoản thành công vui lòng chọn click vào link để có thể kích hoạt tài khoản</p>" +
+                    "<a href='http://localhost:3000/activateAccount/" + userModal.getVerifyCode() + "'>Click To Link</a>" +
+                    "</div>" + "</body></html>";
+            mimeMessage.setContent(body, "text/html; charset=utf-8");
+            mimeMessage.setSubject("Kích hoạt tài khoản");
+            mimeMessageHelper.setTo(userModal.getEmail());
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 

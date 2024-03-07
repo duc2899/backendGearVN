@@ -147,7 +147,6 @@ public class BillService {
         }
 
         if (handelDeleteCart(productModals, billReq.getIdUser()).equals("fault")) {
-            System.out.println("hehi----------------");
             return null;
         }
         sendEmail(billDB);
@@ -280,6 +279,4 @@ public class BillService {
         }
         return "send mail";
     }
-
-
 }

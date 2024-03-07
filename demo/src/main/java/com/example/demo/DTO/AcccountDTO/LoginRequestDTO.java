@@ -1,5 +1,6 @@
 package com.example.demo.DTO.AcccountDTO;
 
+import com.example.demo.modal.AddressNotePackage.LoginType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -12,6 +13,8 @@ public class LoginRequestDTO {
     @NotBlank(message = "Password must be not blank")
     private String password;
 
+    private LoginType type;
+
     public String getEmail() {
         return email;
     }
@@ -23,7 +26,16 @@ public class LoginRequestDTO {
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public LoginType getType() {
+        return type;
+    }
+
+    public void setType(LoginType type) {
+        this.type = type;
     }
 }

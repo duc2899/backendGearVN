@@ -2,6 +2,7 @@ package com.example.demo.controller.ApiPublic;
 
 import com.example.demo.DTO.AcccountDTO.*;
 import com.example.demo.config.JwtService;
+import com.example.demo.modal.AddressNotePackage.LoginType;
 import com.example.demo.modal.UserModalPackage.RefreshTokenModal;
 import com.example.demo.service.AuthenticateService.AuthenticateServices;
 import com.example.demo.utilities.ResponseHandel;
@@ -36,11 +37,17 @@ public class LoginAndRegisterController {
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
+        loginRequestDTO.setType(LoginType.NORMAL);
         if (Objects.equals(authenticateServices.checkLogin(loginRequestDTO), "success")) {
             return ResponseHandel.generateResponse("Login successfully", HttpStatus.OK, authenticateServices.login(loginRequestDTO));
         } else {
             return ResponseHandel.generateResponse(authenticateServices.checkLogin(loginRequestDTO), HttpStatus.NOT_FOUND, null);
         }
+    }
+
+    @PostMapping("/loginWithGoogle")
+    public ResponseEntity<Object> loginWithGoogle(@Valid @RequestBody LoginWithGoogleRequestDTO loginRequestDTO) {
+        return ResponseHandel.generateResponse("Login successfully", HttpStatus.OK, authenticateServices.loginWithGoogle(loginRequestDTO));
     }
 
     @PostMapping("/inforUser")
@@ -61,6 +68,7 @@ public class LoginAndRegisterController {
 
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody RegisterRequestDTO registerRequest) {
+        registerRequest.setType(LoginType.NORMAL);
         if (Objects.equals(authenticateServices.checkRegister(registerRequest), "success")) {
             return ResponseHandel.generateResponse("Register successfully", HttpStatus.CREATED, authenticateServices.register(registerRequest));
         } else {
@@ -111,5 +119,15 @@ public class LoginAndRegisterController {
         loginRequestDTO.setEmail(refreshTokenModal.getUserRefreshToken().getEmail());
         loginRequestDTO.setPassword(refreshTokenModal.getUserRefreshToken().getPassword());
         return ResponseHandel.generateResponse("success", HttpStatus.OK, authenticateServices.loginAdmin(loginRequestDTO, false));
+    }
+
+    @PostMapping("/verifyCode")
+    public ResponseEntity<Object> checkVerifyCode(@RequestBody VerifyCodeRequestDTO verifyCodeRequestDTO) {
+        String message = authenticateServices.checkVerifyCode(verifyCodeRequestDTO);
+        if (message.equals("success")) {
+
+            return ResponseHandel.generateResponse("success", HttpStatus.OK, null);
+        }
+        return ResponseHandel.generateResponse(message, HttpStatus.NOT_FOUND, null);
     }
 }

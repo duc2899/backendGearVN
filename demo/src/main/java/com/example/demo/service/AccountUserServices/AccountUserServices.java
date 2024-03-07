@@ -5,6 +5,7 @@ import com.example.demo.modal.UserModalPackage.OTPModal;
 import com.example.demo.modal.UserModalPackage.UserModal;
 import com.example.demo.repository.OTPRepository.OTPRepository;
 import com.example.demo.repository.UsersRepository.UserRepository;
+import com.example.demo.utilities.GenerateRandomCode;
 import com.example.demo.utilities.TransferUtilities;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,10 +43,14 @@ public class AccountUserServices {
         return result;
     }
 
-    public String findUserByEmail (String email){
-        if(userRepository.findUserByEmailOptional(email).isPresent()){
+    public List<UserModal> findAllUser() {
+        return userRepository.findAll();
+    }
+
+    public String findUserByEmail(String email) {
+        if (userRepository.findUserByEmailOptional(email).isPresent()) {
             return "Exits user";
-        }else {
+        } else {
             return "Not exits user";
         }
     }
@@ -128,13 +136,13 @@ public class AccountUserServices {
         if (otpRepository.findOTPByEmailUserOptional(userModal.get().getId_user()).isEmpty()) {
             OTPModal userOTP = new OTPModal();
             userOTP.setUserOTP(userRepository.findUserByEmail(forgotPasswordDTO.getEmail()));
-            userOTP.setCode(generateRandomCode());
+            userOTP.setCode(GenerateRandomCode.generateRandomCode(4));
             userOTP.setExpirationTime(LocalDateTime.now().plus(expiredTime, ChronoUnit.MINUTES));
             otpRepository.save(userOTP);
             sendEmail(forgotPasswordDTO.getEmail(), userOTP.getCode(), expiredTime);
             return "success";
         } else {
-            findUserByEmail.setCode(generateRandomCode());
+            findUserByEmail.setCode(GenerateRandomCode.generateRandomCode(4));
             findUserByEmail.setExpirationTime(LocalDateTime.now().plus(expiredTime, ChronoUnit.MINUTES));
             sendEmail(forgotPasswordDTO.getEmail(), findUserByEmail.getCode(), expiredTime);
             otpRepository.save(findUserByEmail);
@@ -233,27 +241,6 @@ public class AccountUserServices {
         return false;
     }
 
-    private String generateRandomCode() {
-        // Độ dài của mã
-        int codeLength = 4;
 
-        // Dãy ký tự có thể xuất hiện trong mã
-        String characters = "0123456789ABCDEFGHJKLMNOW";
-
-        // Tạo đối tượng Random
-        Random random = new Random();
-
-        // StringBuilder để xây dựng mã ngẫu nhiên
-        StringBuilder codeBuilder = new StringBuilder();
-
-        // Tạo mã ngẫu nhiên
-        for (int i = 0; i < codeLength; i++) {
-            int index = random.nextInt(characters.length());
-            char randomChar = characters.charAt(index);
-            codeBuilder.append(randomChar);
-        }
-
-        return codeBuilder.toString();
-    }
 
 }

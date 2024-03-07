@@ -42,6 +42,13 @@ public class UserModal implements UserDetails {
 
     @Column(name = "isActive")
     private Boolean isActive = Boolean.TRUE;
+
+    @Column(name = "isEnable")
+    private Boolean isEnable = Boolean.FALSE;
+
+    @Column(name = "verifyCode")
+    private String verifyCode;
+
     @Column(name = "createdAt")
     private String createdDate;
 
